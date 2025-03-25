@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<style>
+    body{
+        background-image: url({{ url_for('static', filename='images/Login.jpg')}} ) !important;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h2>Lol</h2>
+{% endblock %}
