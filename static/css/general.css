@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+body {
+    font-family: "Lexend", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FCFFF6;
+    color: #191919;
+}
+
+h1{
+    text-align: center;
+}
+
+nav{
+    background-color: #005E39;
+    width: 100%;
+    padding: 1vh 2vh;
+    margin-bottom: 2.5vh;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
+    color: white;
+}
+
+nav ul li a span {
+    margin-left: 1.25vh; 
+    position: relative;  
+    color: white;
+}
+
+
+nav ul li {
+    display: inline-block;
+    margin: 0.5vh 2%;
+    font-size: larger;
+    font-weight: bolder;
+    border-right: 2px solid white;
+    border-left: 2px solid white;
+    padding: 1vh 2vh;
+    position: relative;
+}
+
+nav ul li ul {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background-color: white;
+    padding: 0;
+    list-style-type: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 20;
+    min-width: 175px; 
+    width: max-content; 
+    max-width: 250px; 
+    text-align: center; 
+    overflow: hidden; 
+    border-radius: 1.5vh;
+}
+
+nav ul li:hover ul {
+    display: block;
+}
+
+nav ul li ul li {
+    width: 95%; 
+}
+
+nav ul li ul li a {
+    display: block;
+    padding: 0.5vh;
+    color: black;
+    font-weight: normal;
+    font-size: smaller;
+    white-space: nowrap; 
+    width: 95%; 
+    box-sizing: border-box; 
+}
+
+nav ul li ul li:hover {
+    background-color: #e7e7e7;
+    border-radius: 1.5vh;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        font-size: medium;
+        margin: 0.5vh 1%;
+        padding: 0.5vh 1vh;
+    }
+
+    nav ul li ul {
+        position: absolute; /* Keeps dropdown aligned on mobile */
+    }
+}
+
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        font-size: medium;
+        margin: 0.5vh 1%;
+        padding: 0.5vh 1vh;
+    }
+
+    nav ul li ul {
+        position: absolute;
+    }
+}
+
+#buttonbox{
+    background: rgb(68,96,172);
+    background: linear-gradient(-18deg, rgba(68,96,172,1) 50%, rgba(255,199,82,1) 50%);
+    width: 50%;
+    padding: 0.5vh 1vh;
+    border-radius: 2vh;
+    margin-top: 2vh;
+}
+
+#buttonbox #left{
+    text-align: left;    
+    
+}
+
+#buttonbox h4#left  a{
+    color: black;
+}
+
+#buttonbox #right{
+    text-align: right;
+
+}
+
+#logo{
+    width:40%;
+    margin-left: 2vh;
+}
+
+footer{
+    background-color: #E2FFD6;
+}
+
+
+footer i{
+    font-size: xx-large;
+    margin: 3vh;
+    color: black;
+}
+
+footer a{
+    color: black;
+    text-decoration: none;
+}
+
+.top{
+    margin-top: 2.5vh;
+}
