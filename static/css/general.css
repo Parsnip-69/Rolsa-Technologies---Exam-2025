@@ -9,6 +9,14 @@ body {
 
 h1{
     text-align: center;
+    margin-bottom: 1.5vh;
+}
+
+h2{
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 2vh;
+    margin-bottom: 1vh;
 }
 
 nav{
@@ -71,6 +79,10 @@ nav ul li:hover ul {
 
 nav ul li ul li {
     width: 95%; 
+}
+
+span {
+    margin-left: 1vh;
 }
 
 nav ul li ul li a {
@@ -138,6 +150,7 @@ nav a {
     padding: 0.5vh 1vh;
     border-radius: 2vh;
     margin-top: 2vh;
+    box-shadow: 0.25vh 0.5vh 2vh #191919;
 }
 
 #buttonbox #left{
@@ -161,6 +174,7 @@ nav a {
 
 footer{
     background-color: #E2FFD6;
+    border-top: 3px solid #b7beb4;
 }
 
 
@@ -177,4 +191,34 @@ footer a{
 
 .top{
     margin-top: 2.5vh;
+}
+
+#BlueButton{
+    background-color: #4460AC;
+    color: white;
+    padding: 2vh 4vh;
+    border-radius: 2vh;
+    min-width: 250px;
+    max-width: 95%;
+    box-shadow: 0.25vh 0.5vh 2vh #191919;
+    transition: 0.075s;
+}
+
+#BlueButton:hover{
+    box-shadow: 0.5vh 0.5vh 1vh #191919;
+}
+
+#YellowButton{
+    background-color: #FFC752;
+    color: #191919;
+    padding: 2vh 4vh;
+    border-radius: 2vh;
+    min-width: 250px;
+    max-width: 95%;
+    box-shadow: 0.25vh 0.5vh 2vh #191919;
+    transition: 0.075s;
+}
+
+#YellowButton:hover{
+    box-shadow: 0.25vh 0.25vh 1vh #191919;
 }

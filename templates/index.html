@@ -1,16 +1,63 @@
 {% extends "base.html" %}
-{% block css %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 {% block content %}
 <h1>Rolsa Technologies</h1><br>
 
 <div class="container text-center">
     <div class="row align-items-start">
-      <div class="col">
-        One of three columns
-      </div>
-      <div class="col">
-        One of three columns
-      </div>
+        <div class="col">
+            <img src="{{ url_for('static', filename='images/HomeEnergy.jpg')}}" id="hero" alt="Rolsa Technologies Logo">
+        </div>
+        <div class="col">
+            <h3>We are a local green energy technologies company where, we specialise in:</h3>
+            <br>
+            <ul>
+                <li>Solar Panel Installation & Maintenance</li>
+                <li>Electric Vehicle Charging Stations</li>
+                <li>Smart Home Energy Management Systems</li>
+            </ul>
+        </div>
     </div>
-  </div>
+</div>
+
+<br><br>
+<h2>Information Pages</h2>
+<br>
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <h5>You looking for information about your home? Take a look at our Residential Page for more information.</h5>
+        </div>
+        <div class="col">
+            <button id="BlueButton"><h5>Residential Page</h5></button>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <button id="YellowButton"><h5>Commerical Page</h5></button>
+        </div>
+        <div class="col">
+            <h5>If not, for the home and looking for information as a business/ organisation. Head to our Commerical Page to expand your knowledge.</h5>
+        </div>
+    </div>
+</div>
+<br><br>
+<h2>Our Calculators</h2>
+<br>
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <button id="BlueButton"><h5>Carbon Footprint</h5></button>
+        </div>
+        <div class="col">
+            <button id="YellowButton"><h5>Energy Usage</h5></button>
+        </div>
+    </div>
+</div>
+<br>
 {% endblock %}

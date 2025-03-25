@@ -1,0 +1,11 @@
+#hero{
+    width: 75%;
+    border: 2px solid #191919;
+    border-radius: 2vh;
+    box-shadow: 0.125vh 0.25vh 1vh #191919;
+}
+
+.col ul li{
+    font-size: larger;
+}
+
