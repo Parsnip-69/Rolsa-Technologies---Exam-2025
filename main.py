@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect
 import sqlite3 
 from werkzeug.security import generate_password_hash, check_password_hash
+import stripe
 
 app = Flask(__name__)
 app.secret_key = "password"
@@ -36,6 +37,11 @@ def account():
         return render_template("account.html", AdditionalInfo = AdditionalInfo, AccountType = AccountType)
     else:
         return redirect("/login")
+    
+
+@app.route("/consult")
+def consultation():
+    return render_template("consultation.html")
 
 
 
@@ -113,7 +119,7 @@ def CheckAccount():
         
     return render_template("login.html", message=message)
 
-@app.route("/Logout")
+@app.route("/logout")
 def logout():
     session.pop('account', None)
     return redirect("/")

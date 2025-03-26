@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/consultation.css') }}">
+{% endblock %}
+{% block content %}
+<div class="BookMargins">
+    <h1>Book Consultations</h1>
+    <br><br><br>
+    <h5>A consultation can be booked for any time between Monday and Friday. The time that it can be booked for is between 9am and 5pm. The average length of a consultation is 1 hour. Each Consultation is £55.</h5>
+    <br><br><br>
+    <form action="" method="POST">
+        <label for="date">Enter Your Desired Date</label>
+        <br>
+        <input type="date" name="date" id="date" placeholder="e.g. joe.bloggs@email.com" required>
+        <br><br>
+        <label for="time">Enter Your Desired Time</label>
+        <br>
+        <input type="time" name="time" id="time" step="900" required min="09:00" max="17:00">
+        <br><br><br>
+        <button type="submit" value="submit" id="YellowButton">Login</button>
+        <br><br>
+        {% if message != None %}
+            <h5 style="color: red;">{{ message }}</h5>
+        {% endif %} <br>
+    </form>
+</div>
+
+
+{% endblock %}
