@@ -28,7 +28,7 @@
             {% if message != None %}
                 <h5 style="color: red;">{{ message }}</h5>
             {% endif %} <br>
-            <h5 style="text-align: center;">Don't have an account? <a href="/">Create One</a></h5>
+            <h5 style="text-align: center;">Don't have an account? <a href="{{ url_for('register')}}">Create One</a></h5>
         </form>
     </center>
     </div>

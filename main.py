@@ -5,20 +5,47 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = "password"
 
-
+#Page Routing
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    account = session.get('account', None)
+    if account == None:
+        return render_template("login.html")
+    else:
+        return redirect("/account")
 
 
 @app.route("/register")
 def register():
-    return render_template("register.html")
+    account = session.get('account', None)
+    if account == None:
+        return render_template("register.html")
+    else:
+        return redirect("/account")
 
+@app.route("/account")
+def account():
+    account = session.get('account', None)
+    if account != None:
+        AdditionalInfo, AccountType = RetrieveInfo()
+        print(AdditionalInfo, AccountType)
+        return render_template("account.html", AdditionalInfo = AdditionalInfo, AccountType = AccountType)
+    else:
+        return redirect("/login")
+
+
+
+
+#Data Routing
+@app.context_processor
+def inject_global_data():
+    return {
+        "account": session.get('account', None)
+    }
 
 @app.route("/AddAccount", methods=["GET","POST"])
 def AddAccount():
@@ -73,8 +100,8 @@ def CheckAccount():
 
         if account:
             if check_password_hash(account[2], password):
-                session['account'] = account
-                return redirect("/")
+                session['account'] = email
+                return redirect("/account")
                 
             else:
                 message = "The email or password is not correct. Please try again."
@@ -85,6 +112,29 @@ def CheckAccount():
             return render_template("login.html", message=message)
         
     return render_template("login.html", message=message)
+
+@app.route("/Logout")
+def logout():
+    session.pop('account', None)
+    return redirect("/")
+
+
+def RetrieveInfo():
+    account = session.get('account', None)
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID, AccountTypeID FROM Account WHERE Email = ?", (account,))
+    AccountInfo = cursor.fetchone()
+    cursor.execute("SELECT Type From AccountType WHERE AccountTypeID = ?", (AccountInfo[1],))
+    AccountType = cursor.fetchone()
+    if AccountType[0] == "Business":
+        cursor.execute("SELECT * FROM Business WHERE AccountID = ?", (AccountInfo[0],))
+    elif AccountType[0] == "Personal":
+        cursor.execute("SELECT * FROM Personal WHERE AccountID = ?", (AccountInfo[0],))
+    AdditionalInfo = cursor.fetchone()
+    
+    con.close()
+    return AdditionalInfo, AccountType
 
 
 

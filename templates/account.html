@@ -1,1 +1,48 @@
 {% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
+{% block content %}
+<h1>My Account</h1>
+<div class="infobox">
+    <center>
+        <h2>Account Information</h2>
+        <br>
+        <h3>Full Name: {{ AdditionalInfo[1]}}</h3><br>
+        <h3>Email: {{ account }}</h3><br>
+        <h3>Account Type: {{ AccountType[0]}}</h3><br>
+        <h3>Date of Birth: {{ AdditionalInfo[2]}}</h3><br>
+        <h3>Address: {{ AdditionalInfo[3]}}</h3><br>
+        <h3>Postcode: {{ AdditionalInfo[4]}}</h3><br>
+        <h6><a href="">Change Account Details</a></h6>
+    </center>
+</div><br>
+<h2>Upcoming Bookings</h2>
+<div class="infobox"><h1>lol</h1></div>
+<br><br>
+<h2>Reports to check</h2>
+<div class="infobox"><h1>lol</h1></div>
+<br><br>
+<div class="container text-center">
+    <div class="row align-items-center">
+        <div class="col">
+            <button id="BlueButton"><h5>Carbon Footprint</h5></button>
+        </div>
+        <div class="col">
+            <button id="YellowButton"><h5>Energy Usage</h5></button>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <button id="YellowButton"><h5>Booking System</h5></button>
+        </div>
+        <div class="col">
+            <button id="BlueButton"><h5>Logout</h5></button>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock%}

@@ -198,7 +198,7 @@ footer a{
     color: white;
     padding: 2vh 4vh;
     border-radius: 2vh;
-    min-width: 250px;
+    min-width: 300px;
     max-width: 95%;
     box-shadow: 0.25vh 0.5vh 2vh #191919;
     transition: 0.25s;
@@ -213,7 +213,7 @@ footer a{
     color: #191919;
     padding: 2vh 4vh;
     border-radius: 2vh;
-    min-width: 250px;
+    min-width: 300px;
     max-width: 95%;
     box-shadow: 0.25vh 0.5vh 2vh #191919;
     transition: 0.25s;
