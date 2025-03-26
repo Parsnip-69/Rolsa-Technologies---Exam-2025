@@ -2,18 +2,34 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-<style>
+<style> 
     body{
-        background-image: url({{ url_for('static', filename='images/Login.jpg')}} ) !important;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
-        
+        background-image:  url("{{ url_for('static', filename='images/Login.jpg')}}");
     }
-</style>
+</style><!-- The rest of the css for the class is in the css file-->
 {% endblock %}
 
 {% block content %}
-
-<h2>Lol</h2>
+    <div class="loginbox">
+        <center>
+        <h1>Login</h1><br>
+        
+        <form action="/CheckAccount" method="POST">
+            <label for="email">Enter Your Email Address</label>
+            <br>
+            <input type="email" name="email" id="email" placeholder="e.g. joe.bloggs@email.com" required>
+            <br><br>
+            <label for="password">Enter Your Password</label>
+            <br>
+            <input type="password" name="password" id="password" required>
+            <br><br><br>
+            <button type="submit" value="Login" id="YellowButton">Login</button>
+            <br><br>
+            {% if message != None %}
+                <h5 style="color: red;">{{ message }}</h5>
+            {% endif %} <br>
+            <h5 style="text-align: center;">Don't have an account? <a href="/">Create One</a></h5>
+        </form>
+    </center>
+    </div>
 {% endblock %}

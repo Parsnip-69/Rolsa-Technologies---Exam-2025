@@ -19,11 +19,11 @@
 <body>
 <nav>
     <div class="row">
-        <div class="col-sm-3"><img src="{{ url_for('static', filename='images/Logo.png')}}" id="logo" alt="Rolsa Technologies Logo"></div>
+        <div class="col-sm-3"><a href="{{ url_for('index')}}"><img src="{{ url_for('static', filename='images/Logo.png')}}" id="logo" alt="Rolsa Technologies Logo"></a></div>
         <div class="col-sm-6">
             <div class="top">
             <ul>
-                <li>Home</li>
+                <li><a href="{{ url_for('index')}}">Home</a></li>
                 <li>Information <span><i class="fa fa-sort-down"></i></span>
                     <ul>
                         <li><a href="/">Commerical</a></li>
@@ -41,10 +41,12 @@
         </div>
         </div>
         <div  class="col-sm-3">
-            <div id="buttonbox">
-                <h4 id="left"><a href="">Login</a></h4>
-                <h4 id="right"><a href="">Register</a></h4>
-            </div>
+            <center>
+                <div id="buttonbox">
+                    <h4 id="left"><a href="{{ url_for('login')}}">Login</a></h4>
+                    <h4 id="right"><a href="{{ url_for('register')}}">Register</a></h4>
+                </div>
+            </center>
         </div>
     </div>
 </nav>

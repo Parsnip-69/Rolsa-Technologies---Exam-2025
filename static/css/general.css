@@ -3,7 +3,7 @@ body {
     font-family: "Lexend", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #FCFFF6;
+    background-color: #FCFFF6 !important;
     color: #191919;
 }
 
@@ -168,7 +168,7 @@ nav a {
 }
 
 #logo{
-    width:40%;
+    width:25%;
     margin-left: 2vh;
 }
 
@@ -201,11 +201,11 @@ footer a{
     min-width: 250px;
     max-width: 95%;
     box-shadow: 0.25vh 0.5vh 2vh #191919;
-    transition: 0.075s;
+    transition: 0.25s;
 }
 
 #BlueButton:hover{
-    box-shadow: 0.5vh 0.5vh 1vh #191919;
+    box-shadow: 0.25vh 0.25vh 1vh #191919;
 }
 
 #YellowButton{
@@ -216,7 +216,7 @@ footer a{
     min-width: 250px;
     max-width: 95%;
     box-shadow: 0.25vh 0.5vh 2vh #191919;
-    transition: 0.075s;
+    transition: 0.25s;
 }
 
 #YellowButton:hover{

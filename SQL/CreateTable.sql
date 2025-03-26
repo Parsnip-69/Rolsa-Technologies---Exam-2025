@@ -112,9 +112,9 @@ CREATE TABLE PaymentStatus(
 CREATE TABLE Personal(
     AccountID INTEGER NOT NULL,
     FullName VARCHAR(255) NOT NULL,
-    DateOfBirth DATE NOT NULL,
-    Address TEXT NOT NULL,
-    Postcode VARCHAR(8) NOT NULL,
+    DateOfBirth DATE,
+    Address TEXT,
+    Postcode VARCHAR(8),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
 

@@ -15,14 +15,13 @@
         border-radius: 2vh;
         box-shadow: 0.25vh 0.5vh 2vh #191919;
         background-color: #FCFFF6;
-        min-height: 500px;
     }
 
     .opacity{
         opacity: 1;
     }
 
-    #email, #password{
+    #name, #email, #password{
         width: 75%;
         border: 2px solid #191919;
         border-radius: 2vh;
