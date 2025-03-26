@@ -8,20 +8,57 @@
     <center>
         <h2>Account Information</h2>
         <br>
-        <h3>Full Name: {{ AdditionalInfo[1]}}</h3><br>
-        <h3>Email: {{ account }}</h3><br>
-        <h3>Account Type: {{ AccountType[0]}}</h3><br>
-        <h3>Date of Birth: {{ AdditionalInfo[2]}}</h3><br>
-        <h3>Address: {{ AdditionalInfo[3]}}</h3><br>
-        <h3>Postcode: {{ AdditionalInfo[4]}}</h3><br>
+        <h3>Full Name: {{ AccountInfomation.FullName}}</h3><br>
+        <h3>Email: {{ AccountInfomation.Email }}</h3><br>
+        <h3>Account Type: {{ AccountInfomation.Type }} </h3><br>
+        <h3>Date of Birth: {{ AccountInfomation.DateofBirth }}</h3><br>
+        <h3>Address: {{ AccountInfomation.Address }}</h3><br>
+        <h3>Postcode: {{ AccountInfomation.Postcode }}</h3><br>
         <h6><a href="">Change Account Details</a></h6>
     </center>
-</div><br>
+</div><br><br><br>
 <h2>Upcoming Bookings</h2>
-<div class="infobox"><h1>lol</h1></div>
+{% for times, booking in BookingsInformation.items() %}
+<div class="bookingbox">
+    <div class="container text-center">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4>Date:</h4>
+            <h6>{{ booking.Date }}</h6>
+          </div>
+          <div class="col">
+            <h4>Time:</h4>
+            <h6>{{ booking.Time }}</h6>
+          </div>
+          <div class="col">
+            <h4>Type:</h4>
+            <h6>{{ booking.Type }}</h6>
+          </div>
+        </div>
+    </div>
+    <center>
+    <a href="">Change Booking Information</a></center>
+</div>
 <br><br>
+{% endfor %}
 <h2>Reports to check</h2>
-<div class="infobox"><h1>lol</h1></div>
+<div class="bookingbox">
+    <div class="container text-center">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4>Staff:</h4>
+            <h6>blank</h6>
+          </div>
+          <div class="col">
+            <h4>Date:</h4>
+            <h6>blank</h6>
+          </div>
+          <div class="col">
+            <button id="YellowButton"><strong>View Report</strong></button>
+          </div>
+        </div>
+    </div>
+</div>
 <br><br>
 <div class="container text-center">
     <div class="row align-items-center">
@@ -37,7 +74,7 @@
 <div class="container text-center">
     <div class="row align-items-start">
         <div class="col">
-            <button id="YellowButton"><h5>Booking System</h5></button>
+            <button id="YellowButton" onclick="window.location.href='{{ url_for('consultation')}}'"><h5>Booking System</h5></button>
         </div>
         <div class="col">
             <button id="BlueButton" onclick="window.location.href='/logout'"><h5>Logout</h5></button>

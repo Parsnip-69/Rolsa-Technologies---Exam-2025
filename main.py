@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3 
 from werkzeug.security import generate_password_hash, check_password_hash
 import stripe
+from datetime import datetime
+
+import retrieve
 
 app = Flask(__name__)
 app.secret_key = "password"
@@ -32,26 +35,24 @@ def register():
 def account():
     account = session.get('account', None)
     if account != None:
-        AdditionalInfo, AccountType = RetrieveInfo()
-        print(AdditionalInfo, AccountType)
-        return render_template("account.html", AdditionalInfo = AdditionalInfo, AccountType = AccountType)
+        AccountInfomation, BookingsInformation = retrieve.RetrieveInfo(account)
+        print(AccountInfomation, BookingsInformation)
+        return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation)
     else:
         return redirect("/login")
     
 
-@app.route("/consult")
+@app.route("/bookConsult")
 def consultation():
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
     return render_template("consultation.html")
 
 
 
 
-#Data Routing
-@app.context_processor
-def inject_global_data():
-    return {
-        "account": session.get('account', None)
-    }
+
 
 @app.route("/AddAccount", methods=["GET","POST"])
 def AddAccount():
@@ -119,31 +120,36 @@ def CheckAccount():
         
     return render_template("login.html", message=message)
 
+@app.route("/ReserveConsultation", methods=["GET","POST"])
+def ReserveConsultation():
+    message = None
+    now = datetime.now()
+    if request.method == "POST":
+        date = request.form['date']
+        time = request.form['time']
+        ForDateTime = date + " " + time
+        con = sqlite3.connect("RolsaDB.db")
+        cursor = con.cursor()
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session.get('account', None),))
+        AccountID = cursor.fetchone()
+        cursor.execute("INSERT INTO Booking (BookingTypeID, MadeDateTime, ForDateTime, AccountID, PaymentStatusID, PaymentReference) VALUES (?, ?, ?, ?, ?, ?)", (1, now, ForDateTime, AccountID[0], 1, "None"))
+        con.commit()
+        con.close()
+        return redirect("/account")
+    return render_template("consultation.html", message=message)
+
+
+#Other
 @app.route("/logout")
 def logout():
     session.pop('account', None)
     return redirect("/")
 
-
-def RetrieveInfo():
-    account = session.get('account', None)
-    con = sqlite3.connect("RolsaDB.db")
-    cursor = con.cursor()
-    cursor.execute("SELECT AccountID, AccountTypeID FROM Account WHERE Email = ?", (account,))
-    AccountInfo = cursor.fetchone()
-    cursor.execute("SELECT Type From AccountType WHERE AccountTypeID = ?", (AccountInfo[1],))
-    AccountType = cursor.fetchone()
-    if AccountType[0] == "Business":
-        cursor.execute("SELECT * FROM Business WHERE AccountID = ?", (AccountInfo[0],))
-    elif AccountType[0] == "Personal":
-        cursor.execute("SELECT * FROM Personal WHERE AccountID = ?", (AccountInfo[0],))
-    AdditionalInfo = cursor.fetchone()
-    
-    con.close()
-    return AdditionalInfo, AccountType
-
-
-
+@app.context_processor
+def inject_global_data():
+    return {
+        "account": session.get('account', None)
+    }
 
 if __name__ == "__main__":
     app.run(debug=True)
