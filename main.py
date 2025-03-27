@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, session, redirect
-import sqlite3 
-from werkzeug.security import generate_password_hash, check_password_hash
-import stripe
-from datetime import datetime
+from flask import Flask, render_template, session, redirect
 
-import retrieve
+
+
+import get
+import post as Post
 
 app = Flask(__name__)
 app.secret_key = "password"
@@ -33,13 +32,26 @@ def register():
 
 @app.route("/account")
 def account():
+    accountType = session.get('type', None)
     account = session.get('account', None)
-    if account != None:
-        AccountInfomation, BookingsInformation = retrieve.RetrieveInfo(account)
-        print(AccountInfomation, BookingsInformation)
+    if account != None and accountType == 1 or accountType == 2:
+        AccountInfomation, BookingsInformation = get.RetrieveInfo(account)
         return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation)
+    elif account != None and accountType == 3:
+        return redirect("/admin")
     else:
         return redirect("/login")
+    
+@app.route("/admin")
+def admin():
+    staff = session.get('type', None)
+    account = session.get('account', None)
+    if staff == 3:
+        AccountInfomation = get.RetrieveAdmins(account)
+        return render_template("admin.html", AccountInfomation = AccountInfomation)
+    else:
+        return redirect("/account")
+
     
 
 @app.route("/bookConsult")
@@ -50,105 +62,46 @@ def consultation():
     return render_template("consultation.html")
 
 
+@app.route("/CreateAdmin")
+def CreateAdmin():
+    if session.get('type', None) == 3:
+        Offices = get.RetrieveOffice()
+        return render_template("addadmin.html", Offices = Offices)
+    else:
+        return redirect("/account")
 
 
-
-
+#Post Routing
 @app.route("/AddAccount", methods=["GET","POST"])
 def AddAccount():
-    message = None
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        retype = request.form['retype']
-        business = request.form['business']
-
-        if password == retype:
-            con = sqlite3.connect("RolsaDB.db")
-            cursor = con.cursor()
-            cursor.execute("SELECT * FROM Account WHERE Email = ?", (email,))
-            account = cursor.fetchone()
-            if account:
-                message = "Email already exists"
-                return render_template("register.html", message=message)
-            if business == "No":
-                cursor.execute("INSERT INTO Account (Email, Password, AccountTypeID) VALUES (?, ?, ?)", (email, generate_password_hash(password), 1))
-                con.commit()
-                cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
-                accountID = cursor.fetchone()
-                cursor.execute("INSERT INTO Personal(AccountID, FullName) VALUES (?, ?)", (accountID[0], name))
-                con.commit()
-                con.close()
-                return redirect("/login")  
-            elif business == "Yes":
-                cursor.execute("INSERT INTO Account (email, password, AccountTypeID) VALUES (?, ?, ?)", (email, generate_password_hash(password), 2))
-                con.commit()
-                con.close()
-                return redirect("/login")
-        else:
-            message = "Passwords do not match"
-            return render_template("register.html", message=message)
-        
-    return render_template("register.html", message=message)
+    return Post.AddAccount()
 
 @app.route("/CheckAccount", methods=["GET","POST"])
 def CheckAccount():
-    message = None
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        con = sqlite3.connect("RolsaDB.db")
-        cursor = con.cursor()
-        cursor.execute("SELECT * FROM Account WHERE Email = ?", (email,))
-        account = cursor.fetchone()
-        con.close()
-
-        if account:
-            if check_password_hash(account[2], password):
-                session['account'] = email
-                return redirect("/account")
-                
-            else:
-                message = "The email or password is not correct. Please try again."
-                return render_template("login.html", message=message)
-                
-        else:
-            message = "The email or password is not correct. Please try again."
-            return render_template("login.html", message=message)
-        
-    return render_template("login.html", message=message)
+    return Post.CheckAccount()
 
 @app.route("/ReserveConsultation", methods=["GET","POST"])
 def ReserveConsultation():
-    message = None
-    now = datetime.now()
-    if request.method == "POST":
-        date = request.form['date']
-        time = request.form['time']
-        ForDateTime = date + " " + time
-        con = sqlite3.connect("RolsaDB.db")
-        cursor = con.cursor()
-        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session.get('account', None),))
-        AccountID = cursor.fetchone()
-        cursor.execute("INSERT INTO Booking (BookingTypeID, MadeDateTime, ForDateTime, AccountID, PaymentStatusID, PaymentReference) VALUES (?, ?, ?, ?, ?, ?)", (1, now, ForDateTime, AccountID[0], 1, "None"))
-        con.commit()
-        con.close()
-        return redirect("/account")
-    return render_template("consultation.html", message=message)
+    return Post.ReserveConsultation()
+
+@app.route("/AddAdmin", methods=["GET","POST"])
+def AddAdmin():
+    return Post.AddAdmin()
+
 
 
 #Other
 @app.route("/logout")
 def logout():
     session.pop('account', None)
+    session.pop('type', None)
     return redirect("/")
 
 @app.context_processor
 def inject_global_data():
     return {
-        "account": session.get('account', None)
+        "account": session.get('account', None), #email address is considered as account
+        "type": session.get('type', None) #staff is considered as staff
     }
 
 if __name__ == "__main__":

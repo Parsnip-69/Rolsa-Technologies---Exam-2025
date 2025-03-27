@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+{% block content %}
+<h1>Create Admin Account</h1><br>
+<center>
+<form action="{{ url_for('AddAdmin')}}" method="post">
+    <label for="name">Enter the Employee's Full name</label><br>
+    <input type="text" name="name" id="name" required>
+    <br><br>
+    <label for="email">Enter the Employee's Email Address</label><br>
+    <input type="email" name="email" id="email" required>
+    <br><br>
+    <label for="password">Enter the Employee's Password</label><br>
+    <input type="password" name="password" id="password" required>
+    <br><br>
+    <label for="retype">Re-enter the Employee's Password</label><br>
+    <input type="password" name="retype" id="retype" required>
+    <br><br>
+    <label for="role">Enter the Employee's Role</label><br>
+    <input type="text" name="role" id="role" required>
+    <br><br>
+    <label for="ext">Enter the Employee's Phone Extension Number</label><br>
+    <input type="number" name="ext" id="ext" min="100" max="999" required>
+    <br><br>
+    <label for="office">Enter the Employee's Office</label><br>
+    {% for office in Offices %}
+        <input required type="radio" name="office" id="office" value="{{ office[0] }}">{{ office[1] }}<br>
+    {% endfor %}
+    <br>
+    {% if message %}
+        <h5 style="color: red;">{{ message }}</h5>
+    {% endif %}
+    <button type="submit" id="BlueButton">Create Account</button>
+</form></center><br><br>
+{%endblock%}

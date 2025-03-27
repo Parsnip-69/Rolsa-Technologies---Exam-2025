@@ -13,7 +13,6 @@ def RetrieveInfo(account):
     cursor.execute("SELECT AccountID, Type FROM Account JOIN AccountType ON Account.AccountTypeID = AccountType.AccountTypeID WHERE Email = ?", (account,))
     AccountInfo = cursor.fetchone()
 
-    print(AccountInfo)
     if AccountInfo[1] == "Business":
         cursor.execute("SELECT * FROM Business WHERE AccountID = ?", (AccountInfo[0],))
 
@@ -48,3 +47,33 @@ def RetrieveInfo(account):
         times += 1
         
     return AccountInfomation, BookingsInformation
+
+
+def RetrieveOffice():
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT OfficeID, OfficeName FROM Office")
+    Offices = cursor.fetchall()
+    con.close()
+
+
+    return Offices
+
+def RetrieveAdmins(account):
+    AccountInfomation = {}
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT FullName, Email, Role, PhoneExt, OfficeName FROM Account JOIN Staff ON Account.AccountID = Staff.AccountID JOIN Office ON Staff.OfficeID = Office.OfficeID WHERE Email = ?", (account,))
+    Admin = cursor.fetchone()
+    con.close()
+
+    AccountInfomation = {
+        'Name': Admin[0],
+        'Email': Admin[1],
+        'Role': Admin[2],
+        'PhoneExt': Admin[3],
+        'Office': Admin[4]
+    }
+
+    return AccountInfomation
+

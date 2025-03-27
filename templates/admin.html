@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+{% block content %}
+    <h1>Admin Panel</h1>
+    <div class="infobox">
+    <center>
+        <h2>Account Information</h2>
+        <br>
+        <h3>Full Name: {{AccountInfomation.Name}}</h3><br>
+        <h3>Email:  {{AccountInfomation.Email}}</h3><br>
+        <h3>Role:  {{AccountInfomation.Role}}</h3><br>
+        <h3>Phone Extension Number:  {{AccountInfomation.Ext}}</h3><br>
+        <h3>Office:  {{AccountInfomation.Office}}</h3><br>
+        <h6><a href="">Change Account Details</a></h6>
+    </center>
+</div><br><br><br>
+<h2>Upcoming Jobs</h2>
+<div class="infobox">
+    <div class="container text-center">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4>Client:</h4>
+            <h6></h6>
+          </div>
+          <div class="col">
+            <h4>Time:</h4>
+            <h6></h6>
+          </div>
+          <div class="col">
+            <h4>Date:</h4>
+            <h6></h6>
+          </div>
+          <div class="col">
+            <h4>Address:</h4>
+            <h6></h6>
+          </div>
+          <div class="col">
+            <h4>Type:</h4>
+            <h6></h6>
+          </div>
+        </div>
+    </div>
+    <center>
+    <a href="">Change Booking Information</a></center>
+</div><br>
+<h2>Reports to complete</h2>
+<div class="bookingbox">
+    <div class="container text-center">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4>Client:</h4>
+            <h6>blank</h6>
+          </div>
+          <div class="col">
+            <h4>Date:</h4>
+            <h6>blank</h6>
+          </div>
+          <div class="col">
+            <button id="YellowButton"><strong>View Report</strong></button>
+          </div>
+        </div>
+    </div>
+</div>
+<br><br>
+<div class="container text-center">
+    <div class="row align-items-center">
+        <div class="col">
+            <button id="BlueButton" onclick="window.location.href='{{ url_for('CreateAdmin')}}'"><h5>Create Staff Account</h5></button>
+        </div>
+        <div class="col">
+            <button id="YellowButton" onclick="window.location.href='/logout'"><h5>Logout</h5></button>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}
