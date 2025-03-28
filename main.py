@@ -48,13 +48,15 @@ def admin():
     account = session.get('account', None)
     if staff == 3:
         AccountInfomation = get.RetrieveAdmins(account)
-        return render_template("admin.html", AccountInfomation = AccountInfomation)
+        UnassignedWork = get.UnassignedJobs()
+        UpcomingWork = get.UpcomingJobs(account)
+        return render_template("admin.html", AccountInfomation = AccountInfomation, UnassignedWork = UnassignedWork, UpcomingWork = UpcomingWork)
     else:
         return redirect("/account")
 
     
 
-@app.route("/bookConsult")
+@app.route("/book_consult")
 def consultation():
     if session.get('account', None) == None:
         return redirect("/login")
@@ -62,11 +64,18 @@ def consultation():
     return render_template("consultation.html")
 
 
-@app.route("/CreateAdmin")
+@app.route("/create_admin")
 def CreateAdmin():
     if session.get('type', None) == 3:
         Offices = get.RetrieveOffice()
         return render_template("addadmin.html", Offices = Offices)
+    else:
+        return redirect("/account")
+    
+@app.route("/write_report")
+def WriteReport():
+    if session.get('type', None) == 3:
+        return render_template("writereport.html")
     else:
         return redirect("/account")
 
@@ -87,6 +96,14 @@ def ReserveConsultation():
 @app.route("/AddAdmin", methods=["GET","POST"])
 def AddAdmin():
     return Post.AddAdmin()
+
+@app.route("/AssigningConsultation", methods=["GET","POST"])
+def AssigningConsultation():
+    return Post.AssigningConsultation()
+
+@app.route("/UnassignConsultation<BookingID>", methods=["GET","POST"])
+def UnassignConsultation(BookingID):
+    return Post.UnassignConsultation(BookingID)
 
 
 

@@ -157,8 +157,8 @@ CREATE TABLE Staff(
 );
 
 CREATE TABLE StaffSchedule(
-    StaffID INTEGER NOT NULL,
-    ReportID INTEGER NOT NULL,
+    StaffID INTEGER,
+    BookingID INTEGER NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-    FOREIGN KEY (ReportID) REFERENCES Booking(BookingID)
+    FOREIGN KEY (BookingID) REFERENCES Booking(BookingID)
 );

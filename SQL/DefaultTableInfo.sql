@@ -10,4 +10,6 @@ INSERT INTO Office(OfficeName, Address, Postcode) VALUES ('Buckingham Palace', '
 INSERT INTO Office(OfficeName, Address, Postcode) VALUES ('Black Door', '10 Downing Street', 'SW1A 2AA');
 INSERT INTO Office(OfficeName, Address, Postcode) VALUES ('London Eye', '8 Travisstock Street', 'SE1 7PB');
 
-DELETE FROM Office WHERE OfficeID > 0;
+DELETE FROM Booking WHERE BookingID >= 1;
+
+UPDATE StaffSchedule SET StaffID = NULL WHERE StaffID >= 1;

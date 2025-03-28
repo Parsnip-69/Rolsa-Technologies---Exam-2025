@@ -18,6 +18,7 @@
     </center>
 </div><br><br><br>
 <h2>Upcoming Bookings</h2>
+{% if BookingsInformation %}
 {% for times, booking in BookingsInformation.items() %}
 <div class="bookingbox">
     <div class="container text-center">
@@ -41,7 +42,13 @@
 </div>
 <br><br>
 {% endfor %}
+{% else %}
+<br><br>
+<h3 style="text-align: center; color: red;">You have no bookings at the moment</h3>
+<br><br>
+{% endif %}
 <h2>Reports to check</h2>
+{% if ReportViewing %}
 <div class="bookingbox">
     <div class="container text-center">
         <div class="row align-items-center">
@@ -60,6 +67,11 @@
     </div>
 </div>
 <br><br>
+{% else %}
+<br><br>
+<h3 style="text-align: center; color: red;">No reports to check at the moment</h3>
+<br><br>
+{% endif %}
 <div class="container text-center">
     <div class="row align-items-center">
         <div class="col">

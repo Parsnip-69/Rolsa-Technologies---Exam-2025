@@ -85,6 +85,10 @@ def ReserveConsultation():
         AccountID = cursor.fetchone()
         cursor.execute("INSERT INTO Booking (BookingTypeID, MadeDateTime, ForDateTime, AccountID, PaymentStatusID, PaymentReference) VALUES (?, ?, ?, ?, ?, ?)", (1, now, ForDateTime, AccountID[0], 1, "None"))
         con.commit()
+        cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ?", (AccountID[0], ForDateTime))
+        BookingID = cursor.fetchone()
+        cursor.execute("INSERT INTO StaffSchedule(BookingID, StaffID) VALUES (?, ?)", (BookingID[0], None))
+        con.commit()
         con.close()
         return redirect("/account")
     return render_template("consultation.html", message=message)
@@ -118,3 +122,28 @@ def AddAdmin():
         else:
             message = "Passwords do not match"
             return render_template("addadmin.html", message=message)
+        
+
+def AssigningConsultation():
+    message = None
+    email = session['account'] 
+    if request.method == 'POST':
+        BookingID = request.form['BookingID']
+        con = sqlite3.connect("RolsaDB.db")
+        cursor = con.cursor()
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
+        AccountID = cursor.fetchone()
+        cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
+        StaffID = cursor.fetchone()
+        cursor.execute("UPDATE StaffSchedule SET StaffID = ? WHERE BookingID = ?", (StaffID[0], BookingID))
+        con.commit()
+        con.close()
+        return redirect("/admin")
+    
+def UnassignConsultation(BookingID):
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("UPDATE StaffSchedule SET StaffID = NULL WHERE BookingID = ?", (BookingID,))
+    con.commit()
+    con.close()
+    return redirect("/admin")
