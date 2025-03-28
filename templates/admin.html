@@ -19,7 +19,7 @@
 
 <h2>Upcoming Jobs</h2>
 {% if UpcomingWork %}
-{% for times, job in UpcomingWork.items() %}
+{% for counter, job in UpcomingWork.items() %}
 <div class="infobox">
     <div class="container text-center">
         <div class="row align-items-center">
@@ -57,7 +57,7 @@
 <br><br><br>
 {% if UnassignedWork %}
 <h2>Unassigned Consultations</h2>
-{% for times, job in UnassignedWork.items() %}
+{% for counter, job in UnassignedWork.items() %}
 <div class="infobox">
     <div class="container text-center">
         <div class="row align-items-center">

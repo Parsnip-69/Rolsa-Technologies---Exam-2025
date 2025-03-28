@@ -46,12 +46,12 @@ CREATE TABLE Booking (
 );
 
 CREATE TABLE BookingReport (
-    ReportID INTEGER NOT NULL,
+    ReportID INTEGER,
     ConsultationID INTEGER NOT NULL,
-    FollowUpBookingID INTEGER NOT NULL,
-    PRIMARY KEY (ReportID),
+    FollowUpID INTEGER,
+    Foreign KEY (ReportID) REFERENCES Report(ReportID),
     FOREIGN KEY (ConsultationID) REFERENCES Booking(BookingID),
-    FOREIGN KEY (FollowUpBookingID) REFERENCES Booking(BookingID)
+    FOREIGN KEY (FollowUpID) REFERENCES Booking(BookingID)
 );
 
 CREATE TABLE BookingType (
@@ -140,6 +140,7 @@ CREATE TABLE Report(
 CREATE TABLE ReportProducts(
     ProductID INTEGER NOT NULL,
     ReportID INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
     FOREIGN KEY (ReportID) REFERENCES Report(ReportID)
 );

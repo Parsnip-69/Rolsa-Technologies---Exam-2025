@@ -75,8 +75,12 @@ def CheckAccount():
 def ReserveConsultation():
     message = None
     now = datetime.now()
+    formatted_now = now.strftime('%Y-%m-%d')
     if request.method == "POST":
         date = request.form['date']
+        if date < formatted_now:
+            message = "Please select a date in the future"
+            return render_template("consultation.html", message=message)
         time = request.form['time']
         ForDateTime = date + " " + time
         con = sqlite3.connect("RolsaDB.db")
@@ -88,6 +92,8 @@ def ReserveConsultation():
         cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ?", (AccountID[0], ForDateTime))
         BookingID = cursor.fetchone()
         cursor.execute("INSERT INTO StaffSchedule(BookingID, StaffID) VALUES (?, ?)", (BookingID[0], None))
+        con.commit()
+        cursor.execute("INSERT INTO BookingReport(ReportID, ConsultationID, FollowUpID) VALUES (?, ? ,?)", (None ,BookingID[0], None))
         con.commit()
         con.close()
         return redirect("/account")
@@ -146,4 +152,44 @@ def UnassignConsultation(BookingID):
     cursor.execute("UPDATE StaffSchedule SET StaffID = NULL WHERE BookingID = ?", (BookingID,))
     con.commit()
     con.close()
+    return redirect("/admin")
+
+def SaveReport(ReportID):
+    message = None
+    counter = 0  
+    email = session['account'] 
+    quantities = []
+    counter=0
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT ProductID, Title FROM Products")
+    AllProducts = cursor.fetchall()
+
+    if request.method == "POST":
+        description = request.form['description']
+        type = request.form['type']
+        estimatedhours = request.form['estimatedhours']
+        for product in AllProducts:
+            quantities.append(request.form[str(product[0])])
+            counter+=1
+
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
+        AccountID = cursor.fetchone()
+  
+        cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
+        StaffID = cursor.fetchone()
+   
+        cursor.execute("SELECT BookingTypeID FROM BookingType WHERE Title = ?", (type,))
+        TypeID = cursor.fetchone()
+  
+        cursor.execute("INSERT INTO Report(StaffID, Description, LabourHours, BookingTypeID ) VALUES (?, ?, ?, ?)", (StaffID[0], description, estimatedhours, TypeID[0]))
+        con.commit()
+
+        for counter, quantity in enumerate(quantities):
+            quantity = int(quantity)
+            if quantity != 0:
+                cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID ,quantity))
+                con.commit()
+                con.close()
+
     return redirect("/admin")

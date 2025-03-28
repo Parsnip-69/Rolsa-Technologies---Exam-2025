@@ -20,12 +20,13 @@
     <div class="infobox">
         <h2>Report</h2>
         <center>
-            <form action="/writereport" method="post">
+            {% set ReportID = 2 %}
+            <form action="/SaveReport{{ ReportID }}" method="POST">
                 <label for="type">Enter the next stage?</label>
                 <br>
-                <input type="radio" name="type"> <label for="type">Installation</label>
+                <input type="radio" name="type" value="Installation"> <label for="type">Installation</label>
                 <br>
-                <input type="radio" name="type"> <label for="type">Maintenance</label>
+                <input type="radio" name="type" value="Maintenance"> <label for="type">Maintenance</label>
                 <br>
 
                 <label for="description">Enter what will need to </label>
@@ -36,6 +37,13 @@
                 <br>
                 <input type="number" name="estimatedhours" placeholder="e.g. 12" min="1" max="75" id="">
                 <br><br>
+                <h5>Please enter the number of each item you suggest for the work</h5>
+                {% for counter, product in Products.items() %}
+                    <label for="{{product.ProductID}}">Number of {{ product.Name}}:</label><br>
+                    <input type="number" name="{{product.ProductID}}" id="" min="0" placeholder="0" default="0">
+                    <br><br>
+                {% endfor %}
+
                 <button type="submit" id="BlueButton">Submit</button>
                 <br>
 

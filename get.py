@@ -6,7 +6,7 @@ def RetrieveInfo(account):
 
     AccountInfomation ={}
     BookingsInformation = {}
-    times = 0
+    counter = 0
 
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
@@ -39,13 +39,13 @@ def RetrieveInfo(account):
         Date = booking[0].split(" ")[0]
         Time = booking[0].split(" ")[1]
 
-        BookingsInformation[times] = {
+        BookingsInformation[counter] = {
             "Date": Date,
             "Time": Time,
             "Type": booking[1]
         }
 
-        times += 1
+        counter += 1
         
     return AccountInfomation, BookingsInformation
 
@@ -56,7 +56,7 @@ def RetrieveOffice():
     cursor.execute("SELECT OfficeID, OfficeName FROM Office")
     Offices = cursor.fetchall()
     con.close()
-    
+
     return Offices
 
 def RetrieveAdmins(account):
@@ -78,7 +78,7 @@ def RetrieveAdmins(account):
 
 def UpcomingJobs(account):
     UpcomingWork = {}
-    times = 0
+    counter = 0
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
     cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
@@ -92,7 +92,7 @@ def UpcomingJobs(account):
         Date = work[2].split(" ")[0]
         Time = work[2].split(" ")[1]
 
-        UpcomingWork[times] = {
+        UpcomingWork[counter] = {
             "BookingID": work[0],
             "Name": work[1],
             "Date": Date,
@@ -101,7 +101,7 @@ def UpcomingJobs(account):
             "Type": work[4]
         }
 
-        times += 1
+        counter += 1
 
     return UpcomingWork
 
@@ -127,3 +127,38 @@ def UnassignedJobs():
 
     con.close()
     return UnassignedWork
+
+def AllProducts():
+    Products = {}
+    counter = 0
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT ProductID, Title FROM Products")
+    AllProducts = cursor.fetchall()
+    con.close()
+
+    for product in AllProducts:
+        Products[counter] = {
+            "ProductID": product[0],
+            "Name": product[1],
+        }
+
+        counter += 1
+
+    return Products
+
+def OutstandingReport(account):
+    Reports = {}
+    counter = 0
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
+    StaffID = cursor.fetchone() 
+    cursor.execute("SELECT B.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE SS.StaffID = ?", (StaffID[0],))
+    
+    OnTheScheduleOutstanding = cursor.fetchall()
+    print(OnTheScheduleOutstanding)
+
+

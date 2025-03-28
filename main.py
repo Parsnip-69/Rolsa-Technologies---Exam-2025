@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect
 
 
 
-import get
+import get as Get
 import post as Post
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def account():
     accountType = session.get('type', None)
     account = session.get('account', None)
     if account != None and accountType == 1 or accountType == 2:
-        AccountInfomation, BookingsInformation = get.RetrieveInfo(account)
+        AccountInfomation, BookingsInformation = Get.RetrieveInfo(account)
         return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation)
     elif account != None and accountType == 3:
         return redirect("/admin")
@@ -47,9 +47,10 @@ def admin():
     staff = session.get('type', None)
     account = session.get('account', None)
     if staff == 3:
-        AccountInfomation = get.RetrieveAdmins(account)
-        UnassignedWork = get.UnassignedJobs()
-        UpcomingWork = get.UpcomingJobs(account)
+        AccountInfomation = Get.RetrieveAdmins(account)
+        UnassignedWork = Get.UnassignedJobs()
+        UpcomingWork = Get.UpcomingJobs(account)
+        Get.OutstandingReport(account)
         return render_template("admin.html", AccountInfomation = AccountInfomation, UnassignedWork = UnassignedWork, UpcomingWork = UpcomingWork)
     else:
         return redirect("/account")
@@ -67,7 +68,7 @@ def consultation():
 @app.route("/create_admin")
 def CreateAdmin():
     if session.get('type', None) == 3:
-        Offices = get.RetrieveOffice()
+        Offices = Get.RetrieveOffice()
         return render_template("addadmin.html", Offices = Offices)
     else:
         return redirect("/account")
@@ -75,7 +76,8 @@ def CreateAdmin():
 @app.route("/write_report")
 def WriteReport():
     if session.get('type', None) == 3:
-        return render_template("writereport.html")
+        Products = Get.AllProducts()
+        return render_template("writereport.html", Products = Products)
     else:
         return redirect("/account")
 
@@ -105,6 +107,10 @@ def AssigningConsultation():
 def UnassignConsultation(BookingID):
     return Post.UnassignConsultation(BookingID)
 
+@app.route("/SaveReport<ReportID>", methods=["GET","POST"])
+def SaveReport(ReportID):
+    return Post.SaveReport(ReportID)
+
 
 
 #Other
@@ -118,7 +124,7 @@ def logout():
 def inject_global_data():
     return {
         "account": session.get('account', None), #email address is considered as account
-        "type": session.get('type', None) #staff is considered as staff
+        "type": session.get('type', None) #type is considered as account type (Personal, Business, Admin)
     }
 
 if __name__ == "__main__":
