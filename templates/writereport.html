@@ -8,11 +8,11 @@
         <center>
             <h2>Consulatation Information</h2>
             <br>
-            <h3>Client Name: </h3>
+            <h3>Client Name: {{ReportClientInfo[0]}}</h3>
             <br>
-            <h3>Client Address:  </h3>
+            <h3>Client Address: {{ReportClientInfo[1]}}, {{ReportClientInfo[2]}} </h3>
             <br>
-            <h3>Consultation Date & Time:  </h3>
+            <h3>Consultation Date & Time: {{ReportClientInfo[3]}} </h3>
         </center>
     </div>
     <br><br><br>
@@ -20,8 +20,7 @@
     <div class="infobox">
         <h2>Report</h2>
         <center>
-            {% set ReportID = 2 %}
-            <form action="/SaveReport{{ ReportID }}" method="POST">
+            <form action="/SaveReport{{ BookingID }}" method="POST">
                 <label for="type">Enter the next stage?</label>
                 <br>
                 <input type="radio" name="type" value="Installation"> <label for="type">Installation</label>

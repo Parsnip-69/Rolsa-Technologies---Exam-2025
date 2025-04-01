@@ -28,4 +28,4 @@ DELETE FROM Report WHERE ReportID >= 1;
 DELETE FROM ReportProducts WHERE ReportID >= 1;
 
 
-UPDATE BookingReport SET ReportID = NULL WHERE ConsultationID = 1;
+UPDATE BookingReport SET ReportID = NULL WHERE ReportID > 0;

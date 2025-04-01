@@ -154,7 +154,7 @@ def UnassignConsultation(BookingID):
     con.close()
     return redirect("/admin")
 
-def SaveReport(ReportID):
+def SaveReport(BookingID):
     message = None
     counter = 0  
     email = session['account'] 
@@ -185,11 +185,17 @@ def SaveReport(ReportID):
         cursor.execute("INSERT INTO Report(StaffID, Description, LabourHours, BookingTypeID ) VALUES (?, ?, ?, ?)", (StaffID[0], description, estimatedhours, TypeID[0]))
         con.commit()
 
+        cursor.execute("SELECT ReportID FROM Report WHERE StaffID = ? AND Description = ? AND LabourHours = ? AND BookingTypeID = ?", (StaffID[0], description, estimatedhours, TypeID[0]))
+        ReportID = cursor.fetchone()
+
+        cursor.execute("UPDATE BookingReport SET ReportID = ? WHERE ConsultationID = ?", (ReportID[0], BookingID))
+        con.commit()
+
         for counter, quantity in enumerate(quantities):
             quantity = int(quantity)
             if quantity != 0:
-                cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID ,quantity))
+                cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID[0] ,quantity))
                 con.commit()
-                con.close()
-
+                
+    con.close()
     return redirect("/admin")

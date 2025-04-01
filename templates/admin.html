@@ -21,33 +21,45 @@
 {% if UpcomingWork %}
 {% for counter, job in UpcomingWork.items() %}
 <div class="infobox">
-    <div class="container text-center">
-        <div class="row align-items-center">
-          <div class="col">
-            <h4>Client:</h4>
-            <h6>{{ job.Name }}</h6>
-          </div>
-          <div class="col">
-            <h4>Time:</h4>
-            <h6>{{ job.Time }}</h6>
-          </div>
-          <div class="col">
-            <h4>Date:</h4>
-            <h6>{{ job.Date }}</h6>
-          </div>
-          <div class="col">
-            <h4>Address:</h4>
-            <h6>{{ job.Address }}</h6>
-          </div>
-          <div class="col">
-            <h4>Type:</h4>
-            <h6>{{ job.Type }}</h6>
-          </div>
-        </div>
-        <br>
-        <a href="/UnassignConsultation{{ job.BookingID }}">Unassign From Me</a>
+  <div class="container text-center">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4>Client:</h4>
+        <h6>{{ job.Name }}</h6>
+      </div>
+      <div class="col">
+        <h4>Time:</h4>
+        <h6>{{ job.Time }}</h6>
+      </div>
+      <div class="col">
+        <h4>Date:</h4>
+        <h6>{{ job.Date }}</h6>
+      </div>
+      <div class="col">
+        <h4>Address:</h4>
+        <h6>{{ job.Address }}</h6>
+      </div>
+      <div class="col">
+        <h4>Type:</h4>
+        <h6>{{ job.Type }}</h6>
+      </div>
+      <br>
+      <br>
     </div>
-</div><br>
+</div>
+<br><br>
+<div class="container text-center">
+  <div class="row align-items-center">
+    <div class="col">
+      <button id="YellowButton" onclick="window.location.href='/write_report{{ job.BookingID }}'"><strong>Write Report</strong></button>
+    </div>
+    <div class="col">
+      <button id="BlueButton" onclick="window.location.href='/UnassignConsultation{{ job.BookingID }}'">Unassign From Me</a>
+    </div>
+  </div>
+</div>
+</div>
+<br>
 {% endfor %}
 {% else %}
 <br><br>
@@ -85,24 +97,6 @@
 {% endfor %}
 {% endif %}
 
-<h2>Reports to complete</h2>
-<div class="bookingbox">
-    <div class="container text-center">
-        <div class="row align-items-center">
-          <div class="col">
-            <h4>Client:</h4>
-            <h6>blank</h6>
-          </div>
-          <div class="col">
-            <h4>Date:</h4>
-            <h6>blank</h6>
-          </div>
-          <div class="col">
-            <button id="YellowButton"><strong>View Report</strong></button>
-          </div>
-        </div>
-    </div>
-</div>
 <br><br>
 <div class="container text-center">
     <div class="row align-items-center">

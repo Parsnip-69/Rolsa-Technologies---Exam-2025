@@ -13,6 +13,10 @@ app.secret_key = "password"
 def index():
     return render_template("index.html")
 
+@app.route("/charger_map")
+def charger():
+    return render_template("chargermap.html")
+
 @app.route("/login")
 def login():
     account = session.get('account', None)
@@ -36,7 +40,8 @@ def account():
     account = session.get('account', None)
     if account != None and accountType == 1 or accountType == 2:
         AccountInfomation, BookingsInformation = Get.RetrieveInfo(account)
-        return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation)
+        ReportViewing = Get.ReportsToCheck(account)
+        return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation, ReportViewing = ReportViewing)
     elif account != None and accountType == 3:
         return redirect("/admin")
     else:
@@ -73,16 +78,27 @@ def CreateAdmin():
     else:
         return redirect("/account")
     
-@app.route("/write_report")
-def WriteReport():
+@app.route("/write_report<BookingID>")
+def WriteReport(BookingID):
     if session.get('type', None) == 3:
         Products = Get.AllProducts()
-        return render_template("writereport.html", Products = Products)
+        ReportClientInfo = Get.ReportClientInfo(BookingID)
+        return render_template("writereport.html", Products = Products, ReportClientInfo = ReportClientInfo, BookingID = BookingID)
+    else:
+        return redirect("/account")
+    
+@app.route("/view_report<ReportID>")
+def ViewReport(ReportID):
+    if session.get('type', None) == 1:
+        account = session.get('account', None)
+        ConsultationInfo, ReportDetails, ProductInfo, Invoice = Get.RetrievingReportInfo(ReportID, account)
+        return render_template("viewreport.html", ConsultationInfo = ConsultationInfo, ReportDetails = ReportDetails, ProductInfo = ProductInfo, Invoice = Invoice)
     else:
         return redirect("/account")
 
 
 #Post Routing
+#General Post Routing
 @app.route("/AddAccount", methods=["GET","POST"])
 def AddAccount():
     return Post.AddAccount()
@@ -91,25 +107,44 @@ def AddAccount():
 def CheckAccount():
     return Post.CheckAccount()
 
+
+#Personal/Business Post Routing
 @app.route("/ReserveConsultation", methods=["GET","POST"])
 def ReserveConsultation():
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
     return Post.ReserveConsultation()
 
+#Admin Only Post Routing
 @app.route("/AddAdmin", methods=["GET","POST"])
 def AddAdmin():
-    return Post.AddAdmin()
+    if session.get('type', None) == 3:
+        return Post.AddAdmin()
+    else:
+        return redirect("/account")
 
 @app.route("/AssigningConsultation", methods=["GET","POST"])
 def AssigningConsultation():
-    return Post.AssigningConsultation()
+    if session.get('type', None) == 3:
+        return Post.AssigningConsultation()
+    else:
+        return redirect("/account")
 
 @app.route("/UnassignConsultation<BookingID>", methods=["GET","POST"])
 def UnassignConsultation(BookingID):
-    return Post.UnassignConsultation(BookingID)
+    if session.get('type', None) == 3:
+        return Post.UnassignConsultation(BookingID)
+    else:
+        return redirect("/account")
+    
 
-@app.route("/SaveReport<ReportID>", methods=["GET","POST"])
-def SaveReport(ReportID):
-    return Post.SaveReport(ReportID)
+@app.route("/SaveReport<BookingID>", methods=["GET","POST"])
+def SaveReport(BookingID):
+    if session.get('type', None) == 3:  
+        return Post.SaveReport(BookingID)
+    else:
+        return redirect("/account")
 
 
 

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
+{% block content %}
+<h1>View Reports</h1>
+<br>
+<div class="infobox">
+    <center>
+        <h2>When the consultation happen?</h2>
+        <br><br>
+        <div class="container text-center">
+            <div class="row align-items-start">
+                <div class="col">
+                    <h3>Staff Member: </h3>
+                </div>
+                <div class="col">
+                    <h5>{{ ConsultationInfo.Staff}}</h5>
+                </div>
+            </div>
+            <br><br>
+            <div class="row align-items-start">
+                <div class="col">
+                    <h3>Date:</h3>
+                </div>
+                <div class="col">
+                    <h5>{{ ConsultationInfo.Date }}</h5>
+                </div>
+            </div>
+            <br><br>
+            <div class="row align-items-start">
+                <div class="col">
+                    <h3>Time:</h3>
+                </div>
+                <div class="col">
+                    <h5>{{ ConsultationInfo.Time }}</h5>
+                </div>
+            </div>
+            <br><br>
+        </div>
+    </center>
+</div><br><br><br>
+
+<div class="infobox">
+<h2>What staffname thinks should happen next?</h2>
+<br><br>
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <h3>Type of Work: </h3>
+        </div>
+        <div class="col">
+            <h5>{{ReportDetails[2] }}</h5>
+        </div>
+    </div>
+    <br><br>
+    <div class="row align-items-start">
+        <div class="col">
+            <h3>Description of Work:</h3>
+        </div>
+        <div class="col">
+            <p>{{ReportDetails[0]}}</p>
+        </div>
+    </div>
+        <br><br>
+    <div class="row align-items-start">
+        <div class="col">
+            <h3>Estimated Number of Labour Hours required:</h3>
+        </div>
+        <div class="col">
+            <h5>{{ReportDetails[1]}}</h5>
+        </div>
+        
+    </div>
+    <br><br>
+</div>    
+</div>
+</div>
+<br><br>
+
+<div class="infobox">
+    <h2>What products that will be required?</h2>
+    <br><br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>Product Name</h4>
+            </div>
+            <div class="col">
+                <h4>Product Description</h4>
+            </div>
+            <div class="col">
+                <h4>Product Price</h4>
+            </div>
+            <div class="col">
+                <h4>Product Quantity</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% for counter, product in ProductInfo.items() %}
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6>{{product.Name}}</h6>
+            </div>
+            <div class="col">
+                <h6>{{product.Description}}</h6>
+            </div>
+            <div class="col">
+                <h6>{{product.Price}}</h6>
+            </div>
+            <div class="col">
+                <h6>{{product.Quantity}}</h6>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% endfor %}
+</div>
+<br><br>
+<div class="infobox">
+    <h2>Invoice</h2>
+    <br><br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>All Products:</h4>
+            </div>
+            <div class="col">
+                <h4>£{{Invoice.Product}}</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>Total Labour:</h4>
+            </div>
+            <div class="col">
+                <h4>£{{Invoice.Labour}}</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>Subtotal:</h4>
+            </div>
+            <div class="col">
+                <h4>£{{Invoice.SubTotal}}</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>VAT: </h4>
+            </div>
+            <div class="col">
+                <h4>£{{Invoice.VAT}}</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4>Total:</h4>
+            </div>
+            <div class="col">
+                <h4>£{{Invoice.Total}}</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+    
+</div>
+
+<br><br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <button id="YellowButton">Continue to Booking System</button>
+            </div>
+            <div class="col">
+                <button id="BlueButton">Cancel and go back</button>
+            </div>
+        </div>
+    </div>
+<br> <br>
+
+{% endblock %}
+

@@ -85,7 +85,7 @@ def UpcomingJobs(account):
     AccountID = cursor.fetchone()
     cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
     StaffID = cursor.fetchone()
-    cursor.execute("SELECT B.BookingID, FullName, ForDateTime, Address, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN Personal P ON A.AccountID = P.AccountID WHERE StaffID = ?", (StaffID[0],))
+    cursor.execute("SELECT B.BookingID, FullName, ForDateTime, Address, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN Personal P ON A.AccountID = P.AccountID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE StaffID = ? AND BR.ReportID IS NULL", (StaffID[0],))
     Upcoming = cursor.fetchall()
     con.close()
     for work in Upcoming:
@@ -159,6 +159,103 @@ def OutstandingReport(account):
     cursor.execute("SELECT B.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE SS.StaffID = ?", (StaffID[0],))
     
     OnTheScheduleOutstanding = cursor.fetchall()
-    print(OnTheScheduleOutstanding)
+
+
+def ReportClientInfo(BookingID):
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT FullName, Address, Postcode, ForDateTime FROM Booking JOIN Account A ON Booking.AccountID = A.AccountID JOIN Personal P ON A.AccountID = P.AccountID WHERE BookingID = ?", (BookingID,))
+    ReportClientInfo = cursor.fetchone()
+    con.close()
+    return ReportClientInfo
+
+
+def RetrievingReportInfo(ReportID, account):
+    ConsultationInfo = {}
+    ProductInfo = {}
+    TotalProductPrice = 0
+
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+
+    cursor.execute("SELECT FullName, ForDateTime FROM Report JOIN Staff S ON Report.StaffID = S.StaffID JOIN BookingReport BR ON Report.ReportID = BR.ReportID JOIN Booking B ON BR.ConsultationID = B.BookingID  WHERE Report.ReportID = ? AND B.AccountID = ?", (ReportID, AccountID[0]))
+    ReportInfo = cursor.fetchone()
+
+    if ReportInfo == None:
+        return redirect("/account")
+
+    Date = ReportInfo[1].split(" ")[0]
+    Time = ReportInfo[1].split(" ")[1]
+    
+    ConsultationInfo = {
+        "Staff": ReportInfo[0],
+        "Date": Date,
+        "Time": Time
+    }
+
+    cursor.execute("SELECT Description, LabourHours, Title FROM Report JOIN BookingType BT ON Report.BookingTypeID = BT.BookingTypeID WHERE ReportID = ?", (ReportID,))
+    ReportDetails = cursor.fetchone()
+
+    cursor.execute("SELECT Title, Description, Price, Quantity FROM ReportProducts JOIN Products ON ReportProducts.ProductID = Products.ProductID WHERE ReportID = ?", (ReportID,))
+    Products = cursor.fetchall()
+    
+    counter = 0
+    for product in Products:
+        ProductInfo[counter] = {
+            "Name": product[0],
+            "Description": product[1],
+            "Price": product[2],
+            "Quantity": product[3]
+        }
+
+        counter += 1
+
+    for product in Products:
+        TotalProductPrice += product[2] * product[3]
+    TotalLabourPrice = ReportDetails[1] * 50
+    SubTotal = TotalLabourPrice + TotalProductPrice
+    VAT = SubTotal * 0.2
+    Total = SubTotal + VAT
+    Invoice = {
+        "Labour": '%.2f' % TotalLabourPrice,
+        "Product": '%.2f' % TotalProductPrice,
+        "SubTotal": '%.2f' % SubTotal,
+        "VAT": '%.2f' % VAT,
+        "Total": '%.2f' % Total
+    }
+
+    return ConsultationInfo, ReportDetails, ProductInfo, Invoice
+
+
+    
+
+
+
+
+
+
+
+
+
+def ReportsToCheck(account):
+    ReportViewing = {}
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT BR.ReportID, ForDateTime, S.FullName FROM BookingReport BR JOIN Report R ON BR.ReportID = R.ReportID JOIN Staff S ON R.StaffID = S.StaffID JOIN Booking B ON BR.ConsultationID = B.BookingID WHERE B.AccountID = (SELECT AccountID FROM Account WHERE Email = ?)", (account,))
+    Reports = cursor.fetchall()
+    con.close()
+    for report in Reports:
+        Date = report[1].split(" ")[0]
+
+        ReportViewing[report] = {
+            "ReportID": report[0],
+            "Date": Date,
+            "Staff": report[2]
+        }
+    
+    return ReportViewing
+
 
 

@@ -49,24 +49,26 @@
 {% endif %}
 <h2>Reports to check</h2>
 {% if ReportViewing %}
-<div class="bookingbox">
+{% for counter, report in ReportViewing.items() %}
+  <div class="bookingbox">
     <div class="container text-center">
         <div class="row align-items-center">
           <div class="col">
             <h4>Staff:</h4>
-            <h6>blank</h6>
+            <h6>{{ report.Staff }}</h6>
           </div>
           <div class="col">
             <h4>Date:</h4>
-            <h6>blank</h6>
+            <h6>{{ report.Date }}</h6>
           </div>
           <div class="col">
-            <button id="YellowButton"><strong>View Report</strong></button>
+            <button id="YellowButton" onclick="window.location.href='/view_report{{report.ReportID}}'"><strong>View Report {{report.ReportID}}</strong></button>
           </div>
         </div>
     </div>
-</div>
-<br><br>
+  </div>
+  <br><br>
+{% endfor %}
 {% else %}
 <br><br>
 <h3 style="text-align: center; color: red;">No reports to check at the moment</h3>
