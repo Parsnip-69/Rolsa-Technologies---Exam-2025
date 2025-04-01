@@ -41,6 +41,8 @@ def account():
     if account != None and accountType == 1 or accountType == 2:
         AccountInformation, BookingsInformation = Get.RetrieveInfo(account)
         ReportViewing = Get.ReportsToCheck(account)
+        if AccountInformation['Address'] is None:
+            return redirect("/")
         return render_template("account.html", AccountInformation = AccountInformation, BookingsInformation = BookingsInformation, ReportViewing = ReportViewing)
     elif account != None and accountType == 3:
         return redirect("/admin")

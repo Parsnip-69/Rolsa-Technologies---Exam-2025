@@ -23,6 +23,8 @@ INSERT INTO Products(Title, Description, Price) VALUES ('Motion Sensor', 'Automa
 
 DELETE FROM Account WHERE AccountID >= 3;
 DELETE FROM Personal WHERE AccountID >= 2;
+DELETE FROM Business WHERE AccountID >= 1;
+DELETE FROM Staff WHERE AccountID >= 1;
 
 DELETE FROM Booking WHERE BookingTypeID == 4;
 DELETE FROM BookingReport WHERE ConsultationID >= 1;

@@ -89,24 +89,33 @@ def UpcomingJobs(account):
     AccountID = cursor.fetchone()
     cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
     StaffID = cursor.fetchone()
-    cursor.execute("SELECT B.BookingID, FullName, ForDateTime, Address, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN Personal P ON A.AccountID = P.AccountID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE StaffID = ? AND BR.ReportID IS NULL", (StaffID[0],))
+    cursor.execute("SELECT B.BookingID, A.AccountID, Type, ForDateTime, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN AccountType AT ON A.AccountTypeID = AT.AccountTypeID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE StaffID = ? AND BR.ReportID IS NULL", (StaffID[0],))
     Upcoming = cursor.fetchall()
-    con.close()
+
     for work in Upcoming:
-        Date = work[2].split(" ")[0]
-        Time = work[2].split(" ")[1]
+        if work[2] == "Business":
+            cursor.execute("SELECT BusinessName, Address, Postcode FROM Business WHERE AccountID = ?", (work[1],))
+
+        elif work[2] == "Personal":
+            cursor.execute("SELECT FullName, Address FROM Personal WHERE AccountID = ?", (work[1],))
+
+        AccountInfo = cursor.fetchone()
+
+        Date = work[3].split(" ")[0]
+        Time = work[3].split(" ")[1]
 
         UpcomingWork[counter] = {
             "BookingID": work[0],
-            "Name": work[1],
+            "Name": AccountInfo[0],
             "Date": Date,
             "Time": Time,
-            "Address": work[3],
+            "Address": AccountInfo[1],
             "Type": work[4]
         }
 
         counter += 1
 
+    con.close()
     return UpcomingWork
 
 def UnassignedJobs():
@@ -218,6 +227,19 @@ def RetrievingReportInfo(ReportID, account):
 
 
     return ConsultationInfo, ReportDetails, ProductInfo, Invoice
+
+def OutstandingReport(account):
+    Reports = {}
+    counter = 0
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
+    StaffID = cursor.fetchone() 
+    cursor.execute("SELECT B.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE SS.StaffID = ?", (StaffID[0],))
+    
+    OnTheScheduleOutstanding = cursor.fetchall()
 
 
     
