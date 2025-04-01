@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/change.css') }}">
+{% endblock %}
+{% block content %}
+<h1>Change Account Details</h1>
+<br><br>
+<center>
+<form action="{{ url_for('ChangeAccountInfo')}}" method="POST">
+    <input type="hidden" name="type" value="{{ AccountInformation.Type }}">
+    <div class="container text-center">  
+        <h4 style="text-decoration: underline;">Enter Your Address</h4>
+        <br>
+        <div class="row align-items-center">
+            <div class="col">
+                <h5>Current:</h5>
+                <h6>{{ AccountInformation.Address }}</h6>
+            </div>
+            <div class="col">
+                <input type="text" name="address" id="address" placeholder="e.g. 123 Example Street" required>
+            </div>
+        </div>
+        
+        <br><br>
+        
+        <h4 style="text-decoration: underline;">Enter Your Postcode</h4>
+        <br>
+        <div class="row align-items-center">
+            <div class="col">
+                <h5>Current:</h5>
+                <h6>{{ AccountInformation.Postcode }}</h6>
+            </div>
+            <div class="col">
+                <input type="text" name="postcode" id="postcode" pattern="^([A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0AA)$" placeholder="e.g. EX1 2PL" required>
+            </div>
+        </div>
+        
+        <br><br>
+
+        {% if AccountInformation.Type == "Business" %}
+            <h4 style="text-decoration: underline;">Enter the Business' Phone Number</h4>
+            <br>
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5>Current:</h5>
+                    <h6>{{ AccountInformation.PhoneNumber }}</h6>
+                </div>
+                <div class="col">
+                    <input type="tel" name="phone" id="phone" placeholder="e.g. 07123456789" required>
+                </div>
+            </div>
+
+            <br><br>
+        {% elif AccountInformation.Type == "Personal"%}
+            <h4 style="text-decoration: underline;">Enter Your Date Of Birth</h4>
+            <br>
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5>Current:</h5>
+                    <h6>{{ AccountInformation.DateofBirth }}</h6>
+                </div>
+                <div class="col">
+                    <input type="date" name="date" id="date" required>
+                </div>
+            </div>
+            <br><br>
+        {% endif %}
+    </div>
+    <button type="submit" id="BlueButton">Change</button>
+</form>
+</center>
+<br><br>
+{% endblock %}

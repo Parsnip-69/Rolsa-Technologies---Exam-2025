@@ -1,0 +1,21 @@
+
+input[type="text"], [type="date"], [type="tel"]{
+    width:  75%;
+    padding: 1vh;
+    margin: 1vh 0;
+    border: 1px solid #191919;
+    border-radius: 1vh;
+    transition: 0.35s all;
+}
+
+input[type="text"]:focus, [type="date"]:focus, [type="tel"]:focus{
+    box-shadow: 0.25vh 0.5vh 0.5vh #191919;
+}
+
+form{
+    padding: 2vh;
+    border: 2px solid #191919;
+    border-radius: 2vh;
+    box-shadow: 0.25vh 0.5vh 1vh #191919;
+    width: 50%;
+}

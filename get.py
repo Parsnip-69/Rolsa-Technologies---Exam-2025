@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 from flask import render_template, request, session, redirect
 
-def RetrieveInfo(account):
+def RetrieveInfo(account, FromWho):
 
     AccountInformation ={}
     BookingsInformation = {}
@@ -50,8 +50,12 @@ def RetrieveInfo(account):
         }
 
         counter += 1
-        
-    return AccountInformation, BookingsInformation
+
+    
+    if FromWho == "Account":
+        return AccountInformation, BookingsInformation
+    elif FromWho == "Change":
+        return AccountInformation    
 
 
 def RetrieveOffice():
@@ -260,6 +264,5 @@ def ReportsToCheck(account):
         }
     
     return ReportViewing
-
 
 

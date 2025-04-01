@@ -39,10 +39,10 @@ def account():
     accountType = session.get('type', None)
     account = session.get('account', None)
     if account != None and accountType == 1 or accountType == 2:
-        AccountInformation, BookingsInformation = Get.RetrieveInfo(account)
+        AccountInformation, BookingsInformation = Get.RetrieveInfo(account, "Account")
         ReportViewing = Get.ReportsToCheck(account)
         if AccountInformation['Address'] is None:
-            return redirect("/")
+            return redirect("/change_account_details")
         return render_template("account.html", AccountInformation = AccountInformation, BookingsInformation = BookingsInformation, ReportViewing = ReportViewing)
     elif account != None and accountType == 3:
         return redirect("/admin")
@@ -97,6 +97,16 @@ def ViewReport(ReportID):
         return render_template("viewreport.html", ConsultationInfo = ConsultationInfo, ReportDetails = ReportDetails, ProductInfo = ProductInfo, Invoice = Invoice)
     else:
         return redirect("/account")
+    
+@app.route("/change_account_details")
+def ChangeAccountDetails():
+    account = session.get('account', None)
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    AccountInformation = Get.RetrieveInfo(account, "Change")
+    
+    return render_template("change.html", AccountInformation = AccountInformation)
 
 
 #Post Routing
@@ -120,10 +130,18 @@ def ReserveConsultation():
 
 @app.route("/DoNotContinue<ReportID>", methods=["GET","POST"])
 def DoNotContinue(ReportID):
-    if session.get('type', None) == 1:
+    if session.get('type', None) in [1, 2]:
         return Post.DoNotContinue(ReportID)
     else:
         return redirect("/account")
+    
+@app.route("/ChangeAccountInfo", methods=["GET","POST"])
+def ChangeAccountInfo():
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    if session.get('type', None) in [1, 2]:
+        return Post.ChangeAccountInfo()
 
 #Admin Only Post Routing
 @app.route("/AddAdmin", methods=["GET","POST"])

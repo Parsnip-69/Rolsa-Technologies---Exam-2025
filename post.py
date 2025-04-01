@@ -238,6 +238,35 @@ def DoNotContinue(ReportID):
     con.close()
 
     return redirect("/account")
+
+
+def ChangeAccountInfo():
+    message = None
+    email = session['account'] 
+    if request.method == 'POST':
+        type = request.form['type']
+        address = request.form['address']
+        postcode = request.form['postcode']
+        if type == "Business":
+            phone = request.form['phone']
+        elif type == "Personal":
+            date = request.form['date']
+
+        con = sqlite3.connect("RolsaDB.db")
+        cursor = con.cursor()
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
+        AccountID = cursor.fetchone()
+        if type == "Business":
+            cursor.execute("UPDATE Business SET Address = ?, Postcode = ?, PhoneNumber = ? WHERE AccountID = ?", (address, postcode, phone, AccountID[0]))
+            con.commit()
+        elif type == "Personal":
+            cursor.execute("UPDATE Personal SET Address = ?, Postcode = ?, DateOfBirth = ? WHERE AccountID = ?", (address, postcode, date, AccountID[0]))
+            con.commit()
+        con.close()
+        return redirect("/account")
+    return render_template("change.html", message=message)
+        
+       
     
 
 
