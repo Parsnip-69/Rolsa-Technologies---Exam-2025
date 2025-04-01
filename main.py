@@ -39,9 +39,9 @@ def account():
     accountType = session.get('type', None)
     account = session.get('account', None)
     if account != None and accountType == 1 or accountType == 2:
-        AccountInfomation, BookingsInformation = Get.RetrieveInfo(account)
+        AccountInformation, BookingsInformation = Get.RetrieveInfo(account)
         ReportViewing = Get.ReportsToCheck(account)
-        return render_template("account.html", AccountInfomation = AccountInfomation, BookingsInformation = BookingsInformation, ReportViewing = ReportViewing)
+        return render_template("account.html", AccountInformation = AccountInformation, BookingsInformation = BookingsInformation, ReportViewing = ReportViewing)
     elif account != None and accountType == 3:
         return redirect("/admin")
     else:
@@ -52,11 +52,11 @@ def admin():
     staff = session.get('type', None)
     account = session.get('account', None)
     if staff == 3:
-        AccountInfomation = Get.RetrieveAdmins(account)
+        AccountInformation = Get.RetrieveAdmins(account)
         UnassignedWork = Get.UnassignedJobs()
         UpcomingWork = Get.UpcomingJobs(account)
         Get.OutstandingReport(account)
-        return render_template("admin.html", AccountInfomation = AccountInfomation, UnassignedWork = UnassignedWork, UpcomingWork = UpcomingWork)
+        return render_template("admin.html", AccountInformation = AccountInformation, UnassignedWork = UnassignedWork, UpcomingWork = UpcomingWork)
     else:
         return redirect("/account")
 
@@ -116,6 +116,13 @@ def ReserveConsultation():
     
     return Post.ReserveConsultation()
 
+@app.route("/DoNotContinue<ReportID>", methods=["GET","POST"])
+def DoNotContinue(ReportID):
+    if session.get('type', None) == 1:
+        return Post.DoNotContinue(ReportID)
+    else:
+        return redirect("/account")
+
 #Admin Only Post Routing
 @app.route("/AddAdmin", methods=["GET","POST"])
 def AddAdmin():
@@ -154,6 +161,10 @@ def logout():
     session.pop('account', None)
     session.pop('type', None)
     return redirect("/")
+
+@app.route("/error")
+def error():
+    return render_template("error.html")
 
 @app.context_processor
 def inject_global_data():

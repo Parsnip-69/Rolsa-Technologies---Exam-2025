@@ -8,12 +8,20 @@
     <center>
         <h2>Account Information</h2>
         <br>
-        <h3>Full Name: {{ AccountInfomation.FullName}}</h3><br>
-        <h3>Email: {{ AccountInfomation.Email }}</h3><br>
-        <h3>Account Type: {{ AccountInfomation.Type }} </h3><br>
-        <h3>Date of Birth: {{ AccountInfomation.DateofBirth }}</h3><br>
-        <h3>Address: {{ AccountInfomation.Address }}</h3><br>
-        <h3>Postcode: {{ AccountInfomation.Postcode }}</h3><br>
+        {% if AccountInformation.Type == "Personal" %}
+          <h3>Full Name: {{ AccountInformation.FullName}}</h3><br>
+        {% elif AccountInformation.Type == "Business" %}
+          <h3>Business Name: {{ AccountInformation.FullName }}</h3><br>
+        {% endif %}
+        <h3>Email: {{ AccountInformation.Email }}</h3><br>
+        <h3>Account Type: {{ AccountInformation.Type }} </h3><br>
+        {% if AccountInformation.DateofBirth %}
+        <h3>Date of Birth: {{ AccountInformation.DateofBirth }}</h3><br>
+        {% elif AccountInformation.PhoneNumber %}
+        <h3>Phone Number: {{ AccountInformation.PhoneNumber }}</h3><br>
+        {% endif %}
+        <h3>Address: {{ AccountInformation.Address }}</h3><br>
+        <h3>Postcode: {{ AccountInformation.Postcode }}</h3><br>
         <h6><a href="">Change Account Details</a></h6>
     </center>
 </div><br><br><br>
@@ -62,7 +70,7 @@
             <h6>{{ report.Date }}</h6>
           </div>
           <div class="col">
-            <button id="YellowButton" onclick="window.location.href='/view_report{{report.ReportID}}'"><strong>View Report {{report.ReportID}}</strong></button>
+            <button id="YellowButton" onclick="window.location.href='/view_report{{report.ReportID}}'"><strong>View Report</strong></button>
           </div>
         </div>
     </div>

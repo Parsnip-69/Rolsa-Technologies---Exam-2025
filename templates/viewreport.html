@@ -50,7 +50,7 @@
             <h3>Type of Work: </h3>
         </div>
         <div class="col">
-            <h5>{{ReportDetails[2] }}</h5>
+            <h5>{{ReportDetails[3] }}</h5>
         </div>
     </div>
     <br><br>
@@ -59,7 +59,7 @@
             <h3>Description of Work:</h3>
         </div>
         <div class="col">
-            <p>{{ReportDetails[0]}}</p>
+            <p>{{ReportDetails[1]}}</p>
         </div>
     </div>
         <br><br>
@@ -68,7 +68,7 @@
             <h3>Estimated Number of Labour Hours required:</h3>
         </div>
         <div class="col">
-            <h5>{{ReportDetails[1]}}</h5>
+            <h5>{{ReportDetails[2]}}</h5>
         </div>
         
     </div>
@@ -84,20 +84,20 @@
     <div class="container text-center">
         <div class="row align-items-center">
             <div class="col">
-                <h4>Product Name</h4>
+                <h4 style="text-decoration: underline;">Product Name</h4>
             </div>
             <div class="col">
-                <h4>Product Description</h4>
+                <h4 style="text-decoration: underline;">Product Description</h4>
             </div>
             <div class="col">
-                <h4>Product Price</h4>
+                <h4 style="text-decoration: underline;">Product Price</h4>
             </div>
             <div class="col">
-                <h4>Product Quantity</h4>
+                <h4 style="text-decoration: underline;">Product Quantity</h4>
             </div>
         </div>
     </div>
-    <br>
+    <br><br>
     {% for counter, product in ProductInfo.items() %}
     <div class="container text-center">
         <div class="row align-items-center">
@@ -108,7 +108,7 @@
                 <h6>{{product.Description}}</h6>
             </div>
             <div class="col">
-                <h6>{{product.Price}}</h6>
+                <h6>£{{product.Price}}</h6>
             </div>
             <div class="col">
                 <h6>{{product.Quantity}}</h6>
@@ -147,7 +147,7 @@
     <div class="container text-center">
         <div class="row align-items-center">
             <div class="col">
-                <h4>Subtotal:</h4>
+                <h4>Subtotal (Excl. VAT):</h4>
             </div>
             <div class="col">
                 <h4>£{{Invoice.SubTotal}}</h4>
@@ -155,6 +155,7 @@
         </div>
     </div>
     <br>
+    <hr>
     <div class="container text-center">
         <div class="row align-items-center">
             <div class="col">
@@ -187,7 +188,7 @@
                 <button id="YellowButton">Continue to Booking System</button>
             </div>
             <div class="col">
-                <button id="BlueButton">Cancel and go back</button>
+                <button id="BlueButton" onclick="window.location.href='/DoNotContinue{{ReportDetails[0]}}'">Don't continue</button>
             </div>
         </div>
     </div>

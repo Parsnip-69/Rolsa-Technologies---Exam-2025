@@ -4,7 +4,7 @@ from flask import render_template, request, session, redirect
 
 def RetrieveInfo(account):
 
-    AccountInfomation ={}
+    AccountInformation ={}
     BookingsInformation = {}
     counter = 0
 
@@ -22,16 +22,20 @@ def RetrieveInfo(account):
 
     AdditionalInfo = cursor.fetchone()
 
-    AccountInfomation = {
+    AccountInformation = {
         "FullName": AdditionalInfo[1],
         "Email": account,
         "Type": AccountInfo[1],
-        "DateofBirth": AdditionalInfo[2],
         "Address": AdditionalInfo[3],
         "Postcode": AdditionalInfo[4],
     }
+
+    if AccountInfo[1] == "Business":
+        AccountInformation["PhoneNumber"] = AdditionalInfo[2]
+    elif AccountInfo[1] == "Personal":
+        AccountInformation["DateofBirth"] = AdditionalInfo[2]
     
-    cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
+    cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.ConsultationID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE ReportID IS NULL AND AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
     FutureBookings = cursor.fetchall()
     con.close()
     
@@ -47,7 +51,7 @@ def RetrieveInfo(account):
 
         counter += 1
         
-    return AccountInfomation, BookingsInformation
+    return AccountInformation, BookingsInformation
 
 
 def RetrieveOffice():
@@ -60,21 +64,21 @@ def RetrieveOffice():
     return Offices
 
 def RetrieveAdmins(account):
-    AccountInfomation = {}
+    AccountInformation = {}
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
     cursor.execute("SELECT FullName, Email, Role, PhoneExt, OfficeName FROM Account JOIN Staff ON Account.AccountID = Staff.AccountID JOIN Office ON Staff.OfficeID = Office.OfficeID WHERE Email = ?", (account,))
     Admin = cursor.fetchone()
     con.close()
 
-    AccountInfomation = {
+    AccountInformation = {
         'Name': Admin[0],
         'Email': Admin[1],
         'Role': Admin[2],
         'PhoneExt': Admin[3],
         'Office': Admin[4]
     }
-    return AccountInfomation
+    return AccountInformation
 
 def UpcomingJobs(account):
     UpcomingWork = {}
@@ -147,20 +151,6 @@ def AllProducts():
 
     return Products
 
-def OutstandingReport(account):
-    Reports = {}
-    counter = 0
-    con = sqlite3.connect("RolsaDB.db")
-    cursor = con.cursor()
-    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
-    AccountID = cursor.fetchone()
-    cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
-    StaffID = cursor.fetchone() 
-    cursor.execute("SELECT B.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE SS.StaffID = ?", (StaffID[0],))
-    
-    OnTheScheduleOutstanding = cursor.fetchall()
-
-
 def ReportClientInfo(BookingID):
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
@@ -195,7 +185,7 @@ def RetrievingReportInfo(ReportID, account):
         "Time": Time
     }
 
-    cursor.execute("SELECT Description, LabourHours, Title FROM Report JOIN BookingType BT ON Report.BookingTypeID = BT.BookingTypeID WHERE ReportID = ?", (ReportID,))
+    cursor.execute("SELECT ReportID, Description, LabourHours, Title FROM Report JOIN BookingType BT ON Report.BookingTypeID = BT.BookingTypeID WHERE ReportID = ?", (ReportID,))
     ReportDetails = cursor.fetchone()
 
     cursor.execute("SELECT Title, Description, Price, Quantity FROM ReportProducts JOIN Products ON ReportProducts.ProductID = Products.ProductID WHERE ReportID = ?", (ReportID,))
@@ -214,7 +204,7 @@ def RetrievingReportInfo(ReportID, account):
 
     for product in Products:
         TotalProductPrice += product[2] * product[3]
-    TotalLabourPrice = ReportDetails[1] * 50
+    TotalLabourPrice = ReportDetails[2] * 50
     SubTotal = TotalLabourPrice + TotalProductPrice
     VAT = SubTotal * 0.2
     Total = SubTotal + VAT
@@ -226,24 +216,16 @@ def RetrievingReportInfo(ReportID, account):
         "Total": '%.2f' % Total
     }
 
+
     return ConsultationInfo, ReportDetails, ProductInfo, Invoice
 
 
     
-
-
-
-
-
-
-
-
-
 def ReportsToCheck(account):
     ReportViewing = {}
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
-    cursor.execute("SELECT BR.ReportID, ForDateTime, S.FullName FROM BookingReport BR JOIN Report R ON BR.ReportID = R.ReportID JOIN Staff S ON R.StaffID = S.StaffID JOIN Booking B ON BR.ConsultationID = B.BookingID WHERE B.AccountID = (SELECT AccountID FROM Account WHERE Email = ?)", (account,))
+    cursor.execute("SELECT BR.ReportID, ForDateTime, S.FullName FROM BookingReport BR JOIN Report R ON BR.ReportID = R.ReportID JOIN Staff S ON R.StaffID = S.StaffID JOIN Booking B ON BR.ConsultationID = B.BookingID WHERE FollowUpID IS NULL AND B.AccountID = (SELECT AccountID FROM Account WHERE Email = ?)", (account,))
     Reports = cursor.fetchall()
     con.close()
     for report in Reports:

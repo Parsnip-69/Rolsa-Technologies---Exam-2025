@@ -62,9 +62,10 @@ CREATE TABLE BookingType (
 
 CREATE TABLE Business (
     AccountID INTEGER NOT NULL,
-    Address TEXT NOT NULL,
-    Postcode VARCHAR(8) NOT NULL,
-    PhoneNumber VARCHAR(11) NOT NULL,
+    BusinessName VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(11),
+    Address TEXT,
+    Postcode VARCHAR(8),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
 

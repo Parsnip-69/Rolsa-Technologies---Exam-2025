@@ -34,6 +34,10 @@ def AddAccount():
             elif business == "Yes":
                 cursor.execute("INSERT INTO Account (email, password, AccountTypeID) VALUES (?, ?, ?)", (email, generate_password_hash(password), 2))
                 con.commit()
+                cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
+                accountID = cursor.fetchone()
+                cursor.execute("INSERT INTO Business(AccountID, BusinessName) VALUES (?, ?)", (accountID[0], name))
+                con.commit()
                 con.close()
                 return redirect("/login")
         else:
@@ -80,6 +84,10 @@ def ReserveConsultation():
         date = request.form['date']
         if date < formatted_now:
             message = "Please select a date in the future"
+            return render_template("consultation.html", message=message)
+        selected_date = datetime.strptime(date, '%Y-%m-%d')
+        if selected_date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+            message = "Please select a weekday (Monday to Friday)"
             return render_template("consultation.html", message=message)
         time = request.form['time']
         ForDateTime = date + " " + time
@@ -131,7 +139,6 @@ def AddAdmin():
         
 
 def AssigningConsultation():
-    message = None
     email = session['account'] 
     if request.method == 'POST':
         BookingID = request.form['BookingID']
@@ -155,7 +162,6 @@ def UnassignConsultation(BookingID):
     return redirect("/admin")
 
 def SaveReport(BookingID):
-    message = None
     counter = 0  
     email = session['account'] 
     quantities = []
@@ -199,3 +205,39 @@ def SaveReport(BookingID):
                 
     con.close()
     return redirect("/admin")
+
+
+def DoNotContinue(ReportID): 
+    CurrentDateTime = datetime.now()
+
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session['account'],))
+    AccountID = cursor.fetchone()
+
+    cursor.execute("SELECT Booking.BookingID FROM BookingReport JOIN Booking ON BookingReport.ConsultationID = Booking.BookingID WHERE ReportID = ? AND AccountID = ?", (ReportID, AccountID[0]))
+    CheckValidAccount = cursor.fetchone()
+
+    if CheckValidAccount == None:
+        return redirect("/account")
+    
+    cursor.execute("SELECT BookingTypeID FROM BookingType WHERE Title = 'Not Continuing'")
+    TypeID = cursor.fetchone()
+
+    cursor.execute("INSERT INTO Booking(BookingTypeID, MadeDateTime, ForDateTime, AccountID) VALUES (?, ?, ?, ?)", (TypeID[0], CurrentDateTime , CurrentDateTime, AccountID[0]))
+    con.commit()
+
+    cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ?", (AccountID[0], CurrentDateTime))
+    BookingID = cursor.fetchone()
+
+
+    cursor.execute("UPDATE BookingReport SET FollowUpID = ? WHERE ReportID = ?", (BookingID[0], ReportID))
+    con.commit()
+
+    con.close()
+
+    return redirect("/account")
+    
+
+
