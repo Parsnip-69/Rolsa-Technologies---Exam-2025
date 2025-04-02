@@ -36,6 +36,7 @@ CREATE TABLE Booking (
     BookingTypeID INTEGER NOT NULL,
     MadeDateTime DATETIME NOT NULL,
     ForDateTime DATETIME NOT NULL,
+    EndDate DATE,
     AccountID INTEGER NOT NULL,
     PaymentStatusID INTEGER,
     PaymentReference VARCHAR(255),

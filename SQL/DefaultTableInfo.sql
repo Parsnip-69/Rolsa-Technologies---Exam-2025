@@ -34,5 +34,6 @@ DELETE FROM StaffSchedule WHERE BookingID >= 1;
 DELETE FROM Report WHERE ReportID > 0;
 DELETE FROM ReportProducts WHERE ReportID > 0;
 
+UPDATE Booking SET ForDateTime = '2025-04-15 09:00' WHERE BookingID = 9;
 
 

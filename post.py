@@ -194,8 +194,10 @@ def SaveReport(BookingID):
         cursor.execute("SELECT ReportID FROM Report WHERE StaffID = ? AND Description = ? AND LabourHours = ? AND BookingTypeID = ?", (StaffID[0], description, estimatedhours, TypeID[0]))
         ReportID = cursor.fetchone()
 
+
         cursor.execute("UPDATE BookingReport SET ReportID = ? WHERE ConsultationID = ?", (ReportID[0], BookingID))
         con.commit()
+
 
         for counter, quantity in enumerate(quantities):
             if quantity and quantity.strip().isdigit():
@@ -209,6 +211,50 @@ def SaveReport(BookingID):
     con.close()
     return redirect("/admin")
 
+
+def BookReportSlot(ReportID):
+    if session.get('account', None) == None:
+            return redirect("/login")
+    
+    if request.method == "POST":
+        start = request.form['start']
+        end = request.form['end']
+        if start < datetime.now().strftime('%Y-%m-%d'):
+            return render_template("bookreport.html", message="Please select a date in the future")
+        selected_date = datetime.strptime(start, '%Y-%m-%d')
+        if selected_date.weekday() >= 5:
+            return render_template("consultation.html", message="Please select a weekday (Monday to Friday)")
+        
+        start = start + " " + "09:00" 
+
+        CurrentDateTime = datetime.now()
+        
+        con = sqlite3.connect("RolsaDB.db")
+        cursor = con.cursor()
+        
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session['account'],))
+        AccountID = cursor.fetchone()
+       
+        cursor.execute("SELECT BookingTypeID FROM Report WHERE ReportID = ?", (ReportID,))
+        TypeID = cursor.fetchone()
+        
+        cursor.execute("INSERT INTO Booking(BookingTypeID, MadeDateTime, ForDateTime, AccountID, EndDate) VALUES (?, ?, ?, ?, ?)", (TypeID[0], CurrentDateTime , start, AccountID[0], end))
+        con.commit()
+        
+        cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ? AND EndDate = ?", (AccountID[0], start, end))
+        BookingID = cursor.fetchone()
+
+        cursor.execute("SELECT StaffID From Report WHERE ReportID = ?", (ReportID[0],))
+        StaffID = cursor.fetchone()
+        
+        cursor.execute("UPDATE BookingReport SET FollowUpID = ? WHERE ReportID = ?", (BookingID[0], ReportID))
+        con.commit()
+        
+        cursor.execute("INSERT INTO StaffSchedule(BookingID, StaffID) VALUES (?, ?)", (BookingID[0], StaffID[0]))
+        con.commit()
+        
+        con.close()
+        return redirect("/account")
 
 def DoNotContinue(ReportID): 
     CurrentDateTime = datetime.now()
@@ -268,8 +314,5 @@ def ChangeAccountInfo():
         con.close()
         return redirect("/account")
     return render_template("change.html", message=message)
-        
-       
-    
 
 

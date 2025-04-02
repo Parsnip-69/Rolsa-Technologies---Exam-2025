@@ -143,6 +143,16 @@ def ReserveConsultation():
     
     return Post.ReserveConsultation()
 
+@app.route("/BookReportSlot<ReportID>", methods=["GET","POST"])
+def BookReportSlot(ReportID):
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    if session.get('type', None) in [1, 2]:
+        return Post.BookReportSlot(ReportID)
+    else:
+        return redirect("/account")
+
 @app.route("/DoNotContinue<ReportID>", methods=["GET","POST"])
 def DoNotContinue(ReportID):
     if session.get('type', None) in [1, 2]:

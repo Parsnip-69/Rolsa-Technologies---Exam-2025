@@ -49,24 +49,45 @@
         </div>
     </div>
 </div>
-<br>
-<h1>{{BookingInfo.NumberofDays}}</h1>
-
-<form action="" method="post">
-<label for="start-date">Start Date:</label>
-<input type="date" id="start-date" name="start-date" required>
-<br>
-<label for="end-date">End Date:</label>
-<input type="date" id="end-date" name="end-date" required readonly>
-<button type="submit">Book {{BookingInfo.Type}} Slot and Pay Total: {{ BookingInfo.Total }}</button>
+<br><br><br>
+<center>
+<h2>Booking System</h2>
+<br><br><br>
+<h5>When booking a slot for {{BookingInfo.Type}}, our team will arrive at the provided address promptly at 9 AM. They will work until either the job is completed or the workday ends at 5 PM. Each workday consists of 8 hours, and the estimated number of days required is based on the staff's report of the labor hours. <br><br>For this booking, it will be {{BookingInfo.NumberofDays}} day(s) and you will be charged £{{BookingInfo.Total}} for the work.
+</h5>
+<br><br><br>
+<form action="/BookReportSlot{{ReportID}}" method="POST">
+    <br>
+    <label for="start">Enter Your Desired Start Date:</label><br>
+    <input type="date" id="start" name="start" required>
+    <br><br>
+    <label for="end">End Date (Auto Filled):</label><br>
+    <input type="date" id="end" name="end" required readonly>
+    <br><br>
+    {% if message != None %}
+        <h5 style="color: red;">{{ message }}</h5>
+        <br><br>
+    {% endif %} 
+    <button id="BlueButton" type="submit">Reserve {{BookingInfo.Type}} slot & Pay the total</button>
+    <br><br>
 </form>
+<br>
+</center>
 <script>
     const numberOfDays = parseInt("{{BookingInfo.NumberofDays}}", 10) - 1;
-    document.getElementById('start-date').addEventListener('change', function() {
+    document.getElementById('start').addEventListener('change', function() {
         const startDate = new Date(this.value);
-        const endDateInput = document.getElementById('end-date');
+        const endDateInput = document.getElementById('end');
         
         if (!isNaN(startDate)) {
+            if (startDate.getDay() === 0 || startDate.getDay() === 6) {
+                alert("Start date cannot be on a weekend. Please select a weekday.");
+                this.value = "";
+                endDateInput.value = ""; 
+                setTimeout(() => this.dispatchEvent(new Event('change')), 0); 
+                return;
+            }
+
             let endDate = new Date(startDate);
             let daysAdded = 0;
 
@@ -81,4 +102,5 @@
         }
     });
 </script>
+
 {% endblock %}

@@ -10,3 +10,13 @@ div.BookMargins{
     border-radius: 2vh;
     padding: 1vh 2vh;
 }
+
+
+form{
+    padding: 2vh;
+    border: 2px solid #191919;
+    border-radius: 2vh;
+    box-shadow: 0.25vh 0.5vh 1vh #191919;
+    width: 100%;
+    margin-bottom: 5%;
+}

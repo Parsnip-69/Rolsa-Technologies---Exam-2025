@@ -37,10 +37,13 @@ def RetrieveInfo(account, FromWho):
         AccountInformation["DateofBirth"] = AdditionalInfo[2]
     
     cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.ConsultationID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE ReportID IS NULL AND AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
-    FutureBookings = cursor.fetchall()
+    FutureConsultation = cursor.fetchall()
+
+    cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.FollowUpID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
+    FutureFollowUp = cursor.fetchall()
     con.close()
     
-    for booking in FutureBookings:
+    for booking in FutureConsultation + FutureFollowUp:
         Date = booking[0].split(" ")[0]
         Time = booking[0].split(" ")[1]
 
@@ -90,14 +93,20 @@ def UpcomingJobs(account):
     counter = 0
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
+
     cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
     AccountID = cursor.fetchone()
+
     cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
     StaffID = cursor.fetchone()
-    cursor.execute("SELECT B.BookingID, A.AccountID, Type, ForDateTime, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN AccountType AT ON A.AccountTypeID = AT.AccountTypeID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE StaffID = ? AND BR.ReportID IS NULL", (StaffID[0],))
-    Upcoming = cursor.fetchall()
 
-    for work in Upcoming:
+    cursor.execute("SELECT B.BookingID, A.AccountID, Type, ForDateTime, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN AccountType AT ON A.AccountTypeID = AT.AccountTypeID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE StaffID = ? AND BR.ReportID IS NULL", (StaffID[0],))
+    UpcomingConsultation = cursor.fetchall()
+
+    cursor.execute("SELECT B.BookingID, A.AccountID, Type, ForDateTime, Title FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingType BT ON B.BookingTypeID = BT.BookingTypeID JOIN Account A ON A.AccountID = B.AccountID JOIN AccountType AT ON A.AccountTypeID = AT.AccountTypeID JOIN BookingReport BR ON B.BookingID = BR.FollowUpID WHERE StaffID = ? AND BR.FollowUpID IS NOT NULL", (StaffID[0],))
+    UpcomingJobs = cursor.fetchall()
+
+    for work in UpcomingConsultation + UpcomingJobs:
         if work[2] == "Business":
             cursor.execute("SELECT BusinessName, Address, Postcode FROM Business WHERE AccountID = ?", (work[1],))
 
@@ -105,7 +114,7 @@ def UpcomingJobs(account):
             cursor.execute("SELECT FullName, Address FROM Personal WHERE AccountID = ?", (work[1],))
 
         AccountInfo = cursor.fetchone()
-
+        
         Date = work[3].split(" ")[0]
         Time = work[3].split(" ")[1]
 
