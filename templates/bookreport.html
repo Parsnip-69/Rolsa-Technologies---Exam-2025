@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+{% endblock %}
+{% block content %}
+<h1>Booking from Report</h1>
+<br>
+<div class="infobox">
+    <h2>Action Information from the Report</h2>
+    <br><br>
+    <div class="container text-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3>Staff: </h3>
+            </div>
+            <div class="col">
+                <h3>{{ BookingInfo.Staff}}</h3>
+            </div>
+        </div>
+        <br>
+        <div class="row align-items-center">
+            <div class="col">
+                <h3>Type: </h3>
+            </div>
+            <div class="col">
+                <h3>{{ BookingInfo.Type}}</h3>
+            </div>
+        </div>
+        <br>
+        <div class="row align-items-center">
+            <div class="col">
+                <h3>Description: </h3>
+            </div>
+            
+            <div class="col">
+                <h6>{{ BookingInfo.Description}}</h6>
+            </div>
+        </div>
+        <br>
+        <div class="row align-items-center">
+            <div class="col">
+                <h3>Estimated Labour Hours: </h3>
+            </div>
+            
+            <div class="col">
+                <h3>{{ BookingInfo.LabourHours}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<h1>{{BookingInfo.NumberofDays}}</h1>
+
+<form action="" method="post">
+<label for="start-date">Start Date:</label>
+<input type="date" id="start-date" name="start-date" required>
+<br>
+<label for="end-date">End Date:</label>
+<input type="date" id="end-date" name="end-date" required readonly>
+<button type="submit">Book {{BookingInfo.Type}} Slot and Pay Total: {{ BookingInfo.Total }}</button>
+</form>
+<script>
+    const numberOfDays = parseInt("{{BookingInfo.NumberofDays}}", 10) - 1;
+    document.getElementById('start-date').addEventListener('change', function() {
+        const startDate = new Date(this.value);
+        const endDateInput = document.getElementById('end-date');
+        
+        if (!isNaN(startDate)) {
+            let endDate = new Date(startDate);
+            let daysAdded = 0;
+
+            while (daysAdded < numberOfDays) {
+                endDate.setDate(endDate.getDate() + 1);
+                if (endDate.getDay() !== 0 && endDate.getDay() !== 6) {
+                    daysAdded++;
+                }
+            }
+
+            endDateInput.value = endDate.toISOString().split('T')[0];
+        }
+    });
+</script>
+{% endblock %}

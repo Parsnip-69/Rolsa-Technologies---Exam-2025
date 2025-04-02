@@ -57,7 +57,6 @@ def admin():
         AccountInformation = Get.RetrieveAdmins(account)
         UnassignedWork = Get.UnassignedJobs()
         UpcomingWork = Get.UpcomingJobs(account)
-        Get.OutstandingReport(account)
         return render_template("admin.html", AccountInformation = AccountInformation, UnassignedWork = UnassignedWork, UpcomingWork = UpcomingWork)
     else:
         return redirect("/account")
@@ -93,8 +92,22 @@ def WriteReport(BookingID):
 def ViewReport(ReportID):
     if session.get('type', None) == 1:
         account = session.get('account', None)
-        ConsultationInfo, ReportDetails, ProductInfo, Invoice = Get.RetrievingReportInfo(ReportID, account)
+        ConsultationInfo, ReportDetails, ProductInfo, Invoice = Get.RetrievingReportInfo(ReportID, account, "View")
         return render_template("viewreport.html", ConsultationInfo = ConsultationInfo, ReportDetails = ReportDetails, ProductInfo = ProductInfo, Invoice = Invoice)
+    else:
+        return redirect("/account")
+    
+
+@app.route("/book_report<ReportID>")
+def BookReport(ReportID):
+    account = session.get('account', None)
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    if session.get('type', None) in [1, 2]:
+        BookingInfo = Get.RetrievingReportInfo(ReportID, account, "Book")
+        return render_template("bookreport.html", ReportID = ReportID, BookingInfo = BookingInfo)
+        
     else:
         return redirect("/account")
     
@@ -107,6 +120,8 @@ def ChangeAccountDetails():
     AccountInformation = Get.RetrieveInfo(account, "Change")
     
     return render_template("change.html", AccountInformation = AccountInformation)
+
+
 
 
 #Post Routing

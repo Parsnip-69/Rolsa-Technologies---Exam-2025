@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 from flask import render_template, request, session, redirect
+import math
 
 def RetrieveInfo(account, FromWho):
 
@@ -173,7 +174,7 @@ def ReportClientInfo(BookingID):
     return ReportClientInfo
 
 
-def RetrievingReportInfo(ReportID, account):
+def RetrievingReportInfo(ReportID, account, Type):
     ConsultationInfo = {}
     ProductInfo = {}
     TotalProductPrice = 0
@@ -229,24 +230,25 @@ def RetrievingReportInfo(ReportID, account):
         "Total": '%.2f' % Total
     }
 
-
-    return ConsultationInfo, ReportDetails, ProductInfo, Invoice
-
-def OutstandingReport(account):
-    Reports = {}
-    counter = 0
-    con = sqlite3.connect("RolsaDB.db")
-    cursor = con.cursor()
-    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
-    AccountID = cursor.fetchone()
-    cursor.execute("SELECT StaffID FROM Staff WHERE AccountID = ?", (AccountID[0],))
-    StaffID = cursor.fetchone() 
-    cursor.execute("SELECT B.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID JOIN BookingReport BR ON B.BookingID = BR.ConsultationID WHERE SS.StaffID = ?", (StaffID[0],))
+    con.close()
     
-    OnTheScheduleOutstanding = cursor.fetchall()
+    DaysRequired = math.ceil(ReportDetails[2]/8)
+
+    BookingInfo = {
+        "Description": ReportDetails[1],
+        "Type": ReportDetails[3],
+        "LabourHours": ReportDetails[2],
+        "NumberofDays": DaysRequired,
+        "Staff": ConsultationInfo['Staff'],
+        "Total": Invoice['Total']
+    }
 
 
-    
+    if Type == "View":
+        return ConsultationInfo, ReportDetails, ProductInfo, Invoice
+    elif Type == "Book":
+        return BookingInfo
+
 def ReportsToCheck(account):
     ReportViewing = {}
     con = sqlite3.connect("RolsaDB.db")
