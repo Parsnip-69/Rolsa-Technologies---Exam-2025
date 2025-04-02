@@ -23,18 +23,18 @@
             <form action="/SaveReport{{ BookingID }}" method="POST">
                 <label for="type">Enter the next stage?</label>
                 <br>
-                <input type="radio" name="type" value="Installation"> <label for="type">Installation</label>
+                <input type="radio" name="type" value="Installation" required> <label for="type">Installation</label>
                 <br>
-                <input type="radio" name="type" value="Maintenance"> <label for="type">Maintenance</label>
+                <input type="radio" name="type" value="Maintenance" required> <label for="type">Maintenance</label>
                 <br>
 
                 <label for="description">Enter what will need to </label>
                 <br>
-                <textarea name="description" rows="10" cols="100" placeholder="Write in here"></textarea>
+                <textarea name="description" rows="10" cols="100" placeholder="Write in here" required></textarea>
                 <br>
                 <label for="estimatedhours">Enter the number of estimated hours that the work will take</label>
                 <br>
-                <input type="number" name="estimatedhours" placeholder="e.g. 12" min="1" max="75" id="">
+                <input type="number" name="estimatedhours" placeholder="e.g. 12" min="1" max="75" required>
                 <br><br>
                 <h5>Please enter the number of each item you suggest for the work</h5>
                 {% for counter, product in Products.items() %}

@@ -198,10 +198,13 @@ def SaveReport(BookingID):
         con.commit()
 
         for counter, quantity in enumerate(quantities):
-            quantity = int(quantity)
-            if quantity != 0:
-                cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID[0] ,quantity))
-                con.commit()
+            if quantity and quantity.strip().isdigit():
+                quantity = int(quantity)
+                if quantity > 0:
+                    cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID[0] ,quantity))
+                    con.commit()
+
+            
                 
     con.close()
     return redirect("/admin")

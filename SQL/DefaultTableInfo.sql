@@ -30,9 +30,9 @@ DELETE FROM Booking WHERE BookingTypeID == 4;
 DELETE FROM BookingReport WHERE ConsultationID >= 1;
 DELETE FROM StaffSchedule WHERE BookingID >= 1;
 
-DELETE FROM Report WHERE ReportID >= 1;
-DELETE FROM ReportProducts WHERE ReportID >= 1;
+
+DELETE FROM Report WHERE ReportID > 0;
+DELETE FROM ReportProducts WHERE ReportID > 0;
 
 
-UPDATE BookingReport SET FollowUpID = NULL WHERE FollowUpID > 0;
 
