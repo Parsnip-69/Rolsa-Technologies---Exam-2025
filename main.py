@@ -88,6 +88,18 @@ def WriteReport(BookingID):
     else:
         return redirect("/account")
     
+@app.route("/From_Booking<BookingID>")
+def FromBooking(BookingID):
+    account = session.get('account', None)
+    if session.get('account', None) == None:
+        return redirect("/login")
+    if session.get('type', None) in [1, 2]:
+        ReportID = Get.RetrieveReportID(account, BookingID)
+        return redirect("/view_report" + str(ReportID))
+
+
+
+    
 @app.route("/view_report<ReportID>")
 def ViewReport(ReportID):
     if session.get('type', None) == 1:
@@ -157,6 +169,13 @@ def BookReportSlot(ReportID):
 def DoNotContinue(ReportID):
     if session.get('type', None) in [1, 2]:
         return Post.DoNotContinue(ReportID)
+    else:
+        return redirect("/account")
+    
+@app.route("/CancelBooking<BookingID>", methods=["GET","POST"])
+def CancelBooking(BookingID):
+    if session.get('type', None) in [1, 2]:
+        return Post.CancelBooking(BookingID)
     else:
         return redirect("/account")
     

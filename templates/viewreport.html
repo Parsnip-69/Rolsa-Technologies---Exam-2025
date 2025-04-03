@@ -182,6 +182,7 @@
 </div>
 
 <br><br>
+{% if ReportDetails[4] is none %}
     <div class="container text-center">
         <div class="row align-items-center">
             <div class="col">
@@ -192,7 +193,13 @@
             </div>
         </div>
     </div>
-<br> <br>
+    <br><br>
+{% else %}
+    <center>
+        <button id="BlueButton" onclick="window.location.href='/account'">Return to Account Page</button>
+        <br><br><br>
+    </center>
+{% endif %}
 
 {% endblock %}
 

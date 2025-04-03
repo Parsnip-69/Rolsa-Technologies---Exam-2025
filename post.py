@@ -283,7 +283,6 @@ def DoNotContinue(ReportID):
 
     cursor.execute("UPDATE BookingReport SET FollowUpID = ? WHERE ReportID = ?", (BookingID[0], ReportID))
     con.commit()
-
     con.close()
 
     return redirect("/account")
@@ -314,5 +313,27 @@ def ChangeAccountInfo():
         con.close()
         return redirect("/account")
     return render_template("change.html", message=message)
+
+
+def CancelBooking(BookingID):
+    account = session['account']
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    
+    cursor.execute("SELECT BookingID FROM Booking WHERE BookingID = ? AND AccountID = ?", (BookingID, AccountID[0]))
+    CheckValidAccount = cursor.fetchone()
+
+    if CheckValidAccount == None:
+        return redirect("/account")
+
+    cursor.execute("SELECT BookingTypeID FROM BookingType WHERE Title = 'Not Continuing'")
+    TypeID = cursor.fetchone()
+    cursor.execute("UPDATE Booking SET BookingTypeID = ? WHERE BookingID = ?", (TypeID[0], BookingID))
+    con.commit()
+    con.close()
+    return redirect("/account")
 
 

@@ -36,10 +36,10 @@ def RetrieveInfo(account, FromWho):
     elif AccountInfo[1] == "Personal":
         AccountInformation["DateofBirth"] = AdditionalInfo[2]
     
-    cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.ConsultationID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE ReportID IS NULL AND AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
+    cursor.execute("SELECT ForDateTime, Title, BookingID FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.ConsultationID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE ReportID IS NULL AND AccountID = ? AND ForDateTime >= ? AND Title != 'Not Continuing'", (AccountInfo[0], datetime.now()))
     FutureConsultation = cursor.fetchall()
 
-    cursor.execute("SELECT ForDateTime, Title FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.FollowUpID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE AccountID = ? AND ForDateTime >= ?", (AccountInfo[0], datetime.now()))
+    cursor.execute("SELECT ForDateTime, Title, BookingID FROM Booking JOIN BookingReport ON Booking.BookingID = BookingReport.FollowUpID JOIN BookingType ON Booking.BookingTypeID = BookingType.BookingTypeID WHERE AccountID = ? AND ForDateTime >= ? AND Title != 'Not Continuing'", (AccountInfo[0], datetime.now()))
     FutureFollowUp = cursor.fetchall()
     con.close()
     
@@ -48,6 +48,7 @@ def RetrieveInfo(account, FromWho):
         Time = booking[0].split(" ")[1]
 
         BookingsInformation[counter] = {
+            "BookingID": booking[2],
             "Date": Date,
             "Time": Time,
             "Type": booking[1]
@@ -198,6 +199,7 @@ def RetrievingReportInfo(ReportID, account, Type):
 
     if ReportInfo == None:
         return redirect("/account")
+    
 
     Date = ReportInfo[1].split(" ")[0]
     Time = ReportInfo[1].split(" ")[1]
@@ -208,7 +210,7 @@ def RetrievingReportInfo(ReportID, account, Type):
         "Time": Time
     }
 
-    cursor.execute("SELECT ReportID, Description, LabourHours, Title FROM Report JOIN BookingType BT ON Report.BookingTypeID = BT.BookingTypeID WHERE ReportID = ?", (ReportID,))
+    cursor.execute("SELECT Report.ReportID, Description, LabourHours, Title, FollowUpID FROM Report JOIN BookingReport ON Report.ReportID = BookingReport.ReportID JOIN BookingType BT ON Report.BookingTypeID = BT.BookingTypeID WHERE Report.ReportID = ?", (ReportID,))
     ReportDetails = cursor.fetchone()
 
     cursor.execute("SELECT Title, Description, Price, Quantity FROM ReportProducts JOIN Products ON ReportProducts.ProductID = Products.ProductID WHERE ReportID = ?", (ReportID,))
@@ -277,3 +279,16 @@ def ReportsToCheck(account):
     return ReportViewing
 
 
+def RetrieveReportID(account, BookingID):
+    ReportID = {}
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    cursor.execute("SELECT ReportID FROM BookingReport JOIN Booking ON BookingReport.FollowUpID = Booking.BookingID WHERE FollowUPID = ? AND AccountID = ?", (BookingID, AccountID[0]))
+    ReportID = cursor.fetchone()
+    con.close()
+    if ReportID == None:
+        return None
+    else:
+        return ReportID[0]
