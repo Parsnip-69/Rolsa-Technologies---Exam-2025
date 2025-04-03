@@ -1,0 +1,39 @@
+ol{
+    margin-left: 15%;
+    width: 75%;
+}
+ul{
+    margin-left: 5%;
+}
+li{
+    padding-left: 1%;
+    font-size: large;
+}
+p{
+    font-size: large;
+}
+
+ol img {
+    max-width: 75%;
+    border-radius: 1.5vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border-bottom: 0.1px solid #eeeeee; 
+    border-left: 0.1px solid #ececec;
+    border-right: 0.1px solid #ececec;
+    border-top: 0.1px solid #eaeaea;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.box{
+    margin: 0 auto;
+    border: 3px solid #000;
+    padding: 10px 20px;
+    width: 75%;
+    background-color: #f0f0f0;
+    border-radius: 2.5vh;
+    text-align: center;
+}

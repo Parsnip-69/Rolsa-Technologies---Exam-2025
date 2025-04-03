@@ -19,6 +19,13 @@ h2{
     margin-bottom: 1vh;
 }
 
+p{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
 nav{
     background-color: #005E39;
     width: 100%;

@@ -27,11 +27,11 @@
         <h6>{{ job.Name }}</h6>
       </div>
       <div class="col">
-        <h4>Time:</h4>
+        <h4>{% if job.Type == "Not Continuing" %}Cancelled{% endif%} Time:</h4>
         <h6>{{ job.Time }}</h6>
       </div>
       <div class="col">
-        <h4>Date:</h4>
+        <h4>{% if job.Type == "Not Continuing" %}Cancelled{% endif%} Date:</h4>
         <h6>{{ job.Date }}</h6>
       </div>
       <div class="col">
@@ -40,7 +40,12 @@
       </div>
       <div class="col">
         <h4>Type:</h4>
-        <h6>{{ job.Type }}</h6>
+        {% if job.Type == "Not Continuing" %}
+          <h6 style="color: red;">{{ job.Type }}</h6>
+        {% else %}
+          <h6>{{ job.Type }}</h6>
+        {% endif %}
+
       </div>
       <br>
       <br>

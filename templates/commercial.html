@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/information.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Commercial Information</h1>
+<br><br>
+<p>We know that businesses are key to shaping a sustainable future. Reducing your company’s carbon footprint not only benefits the environment but can also improve efficiency, enhance your brand’s reputation, and drive long-term savings. Here are some impactful ways your business can reduce its environmental impact:</p>
+<br>
+<ol>
+    <li>Optimize Energy Use:</li>
+    <ul>
+            <li>Conduct an energy audit: Identify areas of inefficiency and take steps to reduce energy consumption.</li>
+            <li>Switch to energy-efficient lighting and equipment: Install LED lighting, upgrade to energy-efficient HVAC systems, and choose ENERGY STAR-rated appliances and machinery.</li>
+            <li>Implement energy management systems (EMS): Track and control energy use across your business to identify opportunities for improvement.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/commercial/efficiency.webp') }}" width="25%" alt="">
+    <li>Transition to Renewable Energy:</li>
+    <ul>
+            <li>Install solar panels or wind turbines: Power your business with renewable energy sources to reduce your carbon emissions.</li>
+            <li>Purchase green energy: If onsite renewables aren’t feasible, buy electricity from a renewable source through your energy provider.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/commercial/technologies.webp') }}" width="25%" alt="">
+    <li>Sustainable Waste Management:</li>
+    <ul>
+            <li>Reduce, reuse, and recycle: Set up comprehensive recycling programs, compost organic waste, and reduce single-use materials in your packaging.</li>
+            <li>Go paperless: Digitise paperwork and encourage employees to use digital tools to reduce paper waste.</li>
+            <li>Donate or repurpose office supplies: Instead of throwing away unused materials, donate them or find creative ways to repurpose them.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/commercial/circle.webp') }}" width="25%" alt="">
+    <li>Green Transportation and Logistics:</li>
+    <ul>
+            <li>Optimise your supply chain: Choose local suppliers to reduce emissions from transportation or explore eco-friendly shipping options.</li>
+            <li>Switch to electric or hybrid vehicles: If you have a fleet, consider using electric or hybrid vehicles to reduce emissions.</li>
+            <li>Encourage employees to use sustainable transport: Provide incentives for staff to use public transportation, bike, or carpool to reduce commuting emissions.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/commercial/tesla.jpg') }}" width="25%" alt="">
+    <li>Create a Culture of Sustainability:</li>
+    <ul>
+            <li>Educate your staff: Offer training on sustainability practices and encourage employees to adopt energy-efficient habits both in the workplace and at home.</li>
+            <li>Promote green certifications: Earn environmental certifications like LEED or Energy Star to showcase your business's commitment to sustainability and attract eco-conscious customers.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/commercial/hat.jpg') }}" width="25%" alt="">
+</ol>
+<br>
+<p>By implementing these sustainable practices, your business can reduce its carbon footprint while increasing profitability, enhancing your corporate social responsibility profile, and contributing to a healthier planet.</p>
+
+<br><br>
+<h2>Products On the Market</h2>
+<br>
+<div class="container text-center">
+        <div class="row align-items-center">
+            {% for i in range (3) %}
+                <div class="col">
+                    <div class="box">
+                        <img src="/static/images/product{{ThreeProducts[i].ThreeProducts}}.jpg" alt="" class="image" onerror="this.outerHTML='<h4>Image not found.</h4>';">
+                        <br>
+                        <h5>Item: {{ThreeProducts[i].Title}}</h5>
+                        <br>
+                        <h6>Price: £{{ThreeProducts[i].Price}}</h6>
+                        <br>
+                        <h6><a href="/product{{ThreeProducts[i].ProductID}}">More Details</a></h6>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+

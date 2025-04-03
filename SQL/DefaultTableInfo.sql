@@ -34,6 +34,6 @@ DELETE FROM StaffSchedule WHERE BookingID >= 1;
 DELETE FROM Report WHERE ReportID > 0;
 DELETE FROM ReportProducts WHERE ReportID > 0;
 
-UPDATE Booking SET BookingTypeID = 1 WHERE BookingID = 11;
+UPDATE Booking SET BookingTypeID = 2 WHERE BookingID = 12;
 
 

@@ -1,12 +1,9 @@
 from flask import Flask, render_template, session, redirect
-
-
-
 import get as Get
 import post as Post
 
 app = Flask(__name__)
-app.secret_key = "password"
+app.secret_key = "secret_secret_key" 
 
 #Page Routing
 @app.route("/")
@@ -17,6 +14,11 @@ def index():
 def charger():
     return render_template("chargermap.html")
 
+@app.route("/commercial")
+def commercial():
+    ThreeProducts = Get.RetrieveProducts()
+    return render_template("commercial.html", ThreeProducts = ThreeProducts)
+
 @app.route("/login")
 def login():
     account = session.get('account', None)
@@ -24,7 +26,6 @@ def login():
         return render_template("login.html")
     else:
         return redirect("/account")
-
 
 @app.route("/register")
 def register():
@@ -98,8 +99,6 @@ def FromBooking(BookingID):
         return redirect("/view_report" + str(ReportID))
 
 
-
-    
 @app.route("/view_report<ReportID>")
 def ViewReport(ReportID):
     if session.get('type', None) == 1:
@@ -133,9 +132,6 @@ def ChangeAccountDetails():
     
     return render_template("change.html", AccountInformation = AccountInformation)
 
-
-
-
 #Post Routing
 #General Post Routing
 @app.route("/AddAccount", methods=["GET","POST"])
@@ -145,7 +141,6 @@ def AddAccount():
 @app.route("/CheckAccount", methods=["GET","POST"])
 def CheckAccount():
     return Post.CheckAccount()
-
 
 #Personal/Business Post Routing
 @app.route("/ReserveConsultation", methods=["GET","POST"])
@@ -209,15 +204,12 @@ def UnassignConsultation(BookingID):
     else:
         return redirect("/account")
     
-
 @app.route("/SaveReport<BookingID>", methods=["GET","POST"])
 def SaveReport(BookingID):
     if session.get('type', None) == 3:  
         return Post.SaveReport(BookingID)
     else:
         return redirect("/account")
-
-
 
 #Other
 @app.route("/logout")

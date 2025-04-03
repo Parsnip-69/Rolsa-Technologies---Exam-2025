@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from flask import render_template, request, session, redirect
 import math
+import random
 
 def RetrieveInfo(account, FromWho):
 
@@ -292,3 +293,27 @@ def RetrieveReportID(account, BookingID):
         return None
     else:
         return ReportID[0]
+    
+def RetrieveProducts():
+    with sqlite3.connect('RolsaDB.db') as con:
+        cur = con.cursor()
+        cur.execute('SELECT MAX(ProductID) FROM Products')
+        max_product_id = cur.fetchone()[0]
+
+        ThreeProducts = {}
+        for i in range(3):
+            RandomNumber = random.randrange(1, max_product_id + 1)
+            while any(item.get('ProductID') == RandomNumber for item in ThreeProducts.values()):
+                RandomNumber = random.randrange(1, max_product_id + 1)
+
+            cur.execute('SELECT Title, Description, Price FROM Products WHERE ProductID = ?', (RandomNumber,))
+            product_info = cur.fetchone()
+            if product_info:
+                ThreeProducts[i] = {
+                    'ProductID': RandomNumber,
+                    'Title': product_info[0],
+                    'Description': product_info[1],
+                    'Price': product_info[2]
+                }
+
+    return ThreeProducts

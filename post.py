@@ -320,6 +320,9 @@ def CancelBooking(BookingID):
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
 
+    now = datetime.now()
+    formatted_now = now.strftime('%Y-%m-%d %H:%M')
+
     cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
     AccountID = cursor.fetchone()
     
@@ -331,8 +334,10 @@ def CancelBooking(BookingID):
 
     cursor.execute("SELECT BookingTypeID FROM BookingType WHERE Title = 'Not Continuing'")
     TypeID = cursor.fetchone()
-    cursor.execute("UPDATE Booking SET BookingTypeID = ? WHERE BookingID = ?", (TypeID[0], BookingID))
+    cursor.execute("UPDATE Booking SET ForDateTime = ?, BookingTypeID = ? WHERE BookingID = ?", (formatted_now ,TypeID[0], BookingID))
     con.commit()
+
+
     con.close()
     return redirect("/account")
 
