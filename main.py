@@ -5,6 +5,10 @@ import post as Post
 app = Flask(__name__)
 app.secret_key = "secret_secret_key" 
 
+items = []  
+times = 0 
+total = 0
+
 #Page Routing
 @app.route("/")
 def index():
@@ -18,6 +22,10 @@ def charger():
 def commercial():
     ThreeProducts = Get.RetrieveProducts()
     return render_template("commercial.html", ThreeProducts = ThreeProducts)
+
+@app.route("/energy")
+def energy():
+    return render_template("energy.html", items = items, total = total)
 
 @app.route("/login")
 def login():
@@ -141,6 +149,24 @@ def AddAccount():
 @app.route("/CheckAccount", methods=["GET","POST"])
 def CheckAccount():
     return Post.CheckAccount()
+
+@app.route("/AddItem", methods=["GET","POST"])
+def AddItem():
+    try:
+        global items, times, total
+        items, times, total = Post.AddItemEnergy(items, times, total)
+    except Exception as e:
+        print(f"Error in AddItem: {e}")
+        return redirect("/error")
+    return redirect("/energy")
+
+@app.route('/reset')
+def reset():
+    global items, total
+    items = []
+    total = 0
+    return redirect ('/energy')
+
 
 #Personal/Business Post Routing
 @app.route("/ReserveConsultation", methods=["GET","POST"])

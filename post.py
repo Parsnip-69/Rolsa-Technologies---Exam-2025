@@ -3,8 +3,6 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-
-
 def AddAccount():
     message = None
     if request.method == 'POST':
@@ -340,5 +338,24 @@ def CancelBooking(BookingID):
 
     con.close()
     return redirect("/account")
+
+
+def AddItemEnergy(items, times, total):
+    if request.method == 'POST':
+        product_id = request.form['item']
+        quantity = request.form['quantity']
+        kWh = request.form['kWh']
+
+        total += (float(quantity) * float(kWh))
+
+        items.append({
+            'Item': product_id,
+            'Time': quantity,
+            'kWh': kWh
+        })
+
+        times += 1 
+
+        return items, times, total
 
 

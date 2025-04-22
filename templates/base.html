@@ -26,7 +26,7 @@
                 <li><a href="{{ url_for('index')}}">Home</a></li>
                 <li>Information <span><i class="fa fa-sort-down"></i></span>
                     <ul>
-                        <li><a href="/">Commerical</a></li>
+                        <li><a href="{{ url_for('commercial')}}">Commerical</a></li>
                         <li><a href="/">Residential</a></li>
                         <li><a href="{{ url_for('charger')}}">EV Chargers</a></li>
                     </ul>
@@ -34,7 +34,7 @@
                 <li>Calculators <span><i class="fa fa-sort-down"></i></span>
                     <ul>
                         <li><a href="/">Carbon Footprint</a></li>
-                        <li><a href="/">Energy Usage</a></li>
+                        <li><a href="{{ url_for('energy')}}">Energy Usage</a></li>
                     </ul>
                 </li>
             </ul>
