@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/information.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Residential Information</h1>
+<br><br>
+<br>
+<ol>
+    <li>Optimise Energy Use:</li>
+    <ul>
+            <li>Switch to energy-efficient appliances: Choose ENERGY STAR-rated products like refrigerators, washers, and LED lighting.</li>
+            <li>Install a smart thermostat: Control heating and cooling more efficiently by using programmable settings.</li>
+            <li>Seal drafts and improve insulation: Prevent heat loss in winter and reduce the need for excessive heating or cooling.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/residential/energy.webp')}}" width="25%" alt="1">
+    <li>Harness Renewable Energy:</li>
+    <ul>
+            <li>Consider installing solar panels: Generate clean, renewable energy to power your home and reduce reliance on fossil fuels.</li>
+            <li>Opt for green energy programs: If installing solar isn’t an option, check with your utility company about purchasing renewable energy directly from the grid.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/residential/renewable.jpg')}}" width="25%" alt="2">
+    <li>Reduce Water Consumption:</li>
+    <ul>
+            <li>Install low-flow showerheads and faucets: This can reduce both water usage and the energy needed to heat water.</li>
+            <li>Fix leaks: Even a small leak can waste gallons of water over time, increasing your carbon footprint.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/residential/water.jpg')}}" width="25%" alt="3">
+    <li>Sustainable Transportation:</li>
+    <ul>
+            <li>Drive less: Walk, bike, or use public transit when possible.</li>
+            <li>Switch to an electric or hybrid vehicle: These cars produce fewer emissions compared to conventional gasoline-powered vehicles.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/residential/transport.jpg')}}" width="25%" alt="4">
+    <li>Minimize Waste:</li>
+    <ul>
+            <li>Compost organic waste: This helps reduce methane emissions from landfills and creates nutrient-rich soil.</li>
+            <li>Recycle and repurpose: Be mindful of packaging and reduce single-use plastics by choosing reusable alternatives.</li>
+    </ul>
+    <img src="{{ url_for('static', filename='images/residential/waste.webp')}}" width="25%" alt="5">
+</ol>
+           
+<br>
+<p>By integrating these green strategies, you can reduce your carbon footprint and live in a way that’s more aligned with the planet’s needs, all while saving money and increasing your energy efficiency.</p>
+
+<br><br>
+<h2>Products On the Market</h2>
+<br>
+<div class="container text-center">
+        <div class="row align-items-center">
+            {% for i in range (3) %}
+                <div class="col">
+                    <div class="box">
+                        <h5 style="text-decoration: underline;">{{ThreeProducts[i].Title}}</h5>
+                        <img src="/static/images/products/{{ThreeProducts[i].ProductID}}.jpg" alt="" class="image" onerror="this.outerHTML='<h4>Image not found.</h4>';">
+                        <h6>Price: £{{ThreeProducts[i].Price}}</h6>
+                        <br>
+                        <h6><a href="/product{{ThreeProducts[i].ProductID}}">More Details</a></h6>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+

@@ -23,6 +23,12 @@ def commercial():
     ThreeProducts = Get.RetrieveProducts()
     return render_template("commercial.html", ThreeProducts = ThreeProducts)
 
+@app.route("/residential")
+def residential():
+    ThreeProducts = Get.RetrieveProducts()
+    return render_template("residential.html", ThreeProducts = ThreeProducts)
+
+
 @app.route("/energy")
 def energy():
     return render_template("energy.html", items = items, total = total)
