@@ -317,3 +317,20 @@ def RetrieveProducts():
                 }
 
     return ThreeProducts
+
+def RetrieveProductInfo(productID):
+    ProductInfo = {}
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT Title, Description, Price FROM Products WHERE ProductID = ?", (productID,))
+    ProductInfo = cursor.fetchone()
+    con.close()
+
+    ProductInfo = {
+        "ProductID": productID,
+        "Title": ProductInfo[0],
+        "Description": ProductInfo[1],
+        "Price": ProductInfo[2]
+    }
+
+    return ProductInfo

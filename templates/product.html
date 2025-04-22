@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/information.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<br><br>
+<div class="box">
+    <center>
+        <h1>Product Information</h1>
+        <img src="/static/images/products/{{ ProductInfo.ProductID }}.jpg" id="size" alt="" class="image" onerror="this.outerHTML='<h4>Image not found.</h4>';">
+        <br><br>
+        <h2>Product Name</h2>
+        <h3>{{ ProductInfo.Title }}</h3>
+        <br>
+        <h2>Price</h2>
+        <h3>£{{ ProductInfo.Price }}</h3>
+        <br>
+        <h2>Description</h2>
+        <h3>{{ ProductInfo.Description }}</h3>
+        <br>
+    </center>
+</div>
+<br><br>
+<center>
+<button id="BlueButton" onclick="history.back()">Back to previous page</button>
+</center>
+<br><br>
+{% endblock %}

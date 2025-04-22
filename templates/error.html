@@ -1,9 +1,28 @@
 {% extends "base.html" %}
+{% block css %}
+    <style>
+    .box{
+        margin: 0 auto;
+        border: 3px solid #000;
+        padding: 10px 20px;
+        width: 50%;
+        background-color: #FCFFF6;
+        border-radius: 2.5vh;
+        text-align: center;
+        box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+    }
+    </style>
+{% endblock %}
+
 {% block content %}
-<center>
-    <h1>Something went wrong</h1><br>
-    <h5>Sorry, something went wrong. Please try again later.</h5><br><br>
-    <button id="BlueButton" onclick="window.location.href='/'">Return to Home</button>
-    <br><br><br>
-</center>
+<div class="box">
+    <center>
+        <br><br>
+        <h1>Something went wrong</h1><br>
+        <h5>Sorry, something went wrong. Please try again later.</h5><br><br>
+        <button id="BlueButton" onclick="window.location.href='/'">Return to Home</button>
+        <br><br>
+    </center>
+</div>
+<br>
 {% endblock %}

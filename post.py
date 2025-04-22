@@ -73,38 +73,6 @@ def CheckAccount():
         
     return render_template("login.html", message=message)
 
-
-def ReserveConsultation():
-    message = None
-    now = datetime.now()
-    formatted_now = now.strftime('%Y-%m-%d')
-    if request.method == "POST":
-        date = request.form['date']
-        if date < formatted_now:
-            message = "Please select a date in the future"
-            return render_template("consultation.html", message=message)
-        selected_date = datetime.strptime(date, '%Y-%m-%d')
-        if selected_date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
-            message = "Please select a weekday (Monday to Friday)"
-            return render_template("consultation.html", message=message)
-        time = request.form['time']
-        ForDateTime = date + " " + time
-        con = sqlite3.connect("RolsaDB.db")
-        cursor = con.cursor()
-        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session.get('account', None),))
-        AccountID = cursor.fetchone()
-        cursor.execute("INSERT INTO Booking (BookingTypeID, MadeDateTime, ForDateTime, AccountID, PaymentStatusID, PaymentReference) VALUES (?, ?, ?, ?, ?, ?)", (1, now, ForDateTime, AccountID[0], 1, "None"))
-        con.commit()
-        cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ?", (AccountID[0], ForDateTime))
-        BookingID = cursor.fetchone()
-        cursor.execute("INSERT INTO StaffSchedule(BookingID, StaffID) VALUES (?, ?)", (BookingID[0], None))
-        con.commit()
-        cursor.execute("INSERT INTO BookingReport(ReportID, ConsultationID, FollowUpID) VALUES (?, ? ,?)", (None ,BookingID[0], None))
-        con.commit()
-        con.close()
-        return redirect("/account")
-    return render_template("consultation.html", message=message)
-
 def AddAdmin():
     message = None
     if request.method == 'POST':
@@ -135,6 +103,38 @@ def AddAdmin():
             message = "Passwords do not match"
             return render_template("addadmin.html", message=message)
         
+def ReserveConsultation():
+    message = None
+    now = datetime.now()
+    formatted_now = now.strftime('%Y-%m-%d')
+    formatted_time = now.strftime('%H:%M')
+    if request.method == "POST":
+        date = request.form['date']
+        time = request.form['time']
+        if date <= formatted_now or date == formatted_now and time < formatted_time:
+            message = "Please select a date in the future"
+            return render_template("consultation.html", message=message)
+        selected_date = datetime.strptime(date, '%Y-%m-%d')
+        if selected_date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+            message = "Please select a weekday (Monday to Friday)"
+            return render_template("consultation.html", message=message)
+        
+        ForDateTime = date + " " + time
+        con = sqlite3.connect("RolsaDB.db")
+        cursor = con.cursor()
+        cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (session.get('account', None),))
+        AccountID = cursor.fetchone()
+        cursor.execute("INSERT INTO Booking (BookingTypeID, MadeDateTime, ForDateTime, AccountID, PaymentStatusID, PaymentReference) VALUES (?, ?, ?, ?, ?, ?)", (1, now, ForDateTime, AccountID[0], 1, "None"))
+        con.commit()
+        cursor.execute("SELECT BookingID FROM Booking WHERE AccountID = ? AND ForDateTime = ?", (AccountID[0], ForDateTime))
+        BookingID = cursor.fetchone()
+        cursor.execute("INSERT INTO StaffSchedule(BookingID, StaffID) VALUES (?, ?)", (BookingID[0], None))
+        con.commit()
+        cursor.execute("INSERT INTO BookingReport(ReportID, ConsultationID, FollowUpID) VALUES (?, ? ,?)", (None ,BookingID[0], None))
+        con.commit()
+        con.close()
+        return redirect("/account")
+    return render_template("consultation.html", message=message)
 
 def AssigningConsultation():
     email = session['account'] 
@@ -204,8 +204,6 @@ def SaveReport(BookingID):
                     cursor.execute("INSERT INTO ReportProducts (ProductID, ReportID, Quantity) VALUES (?, ?, ?)", (AllProducts[counter][0],ReportID[0] ,quantity))
                     con.commit()
 
-            
-                
     con.close()
     return redirect("/admin")
 

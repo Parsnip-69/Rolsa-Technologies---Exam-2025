@@ -9,6 +9,20 @@ items = []
 times = 0 
 total = 0
 
+#Routing to all the pages
+@app.context_processor
+def inject_global_data():
+    return {
+        "account": session.get('account', None), #email address is considered as account
+        "type": session.get('type', None) #type is considered as account type (Personal, Business, Admin)
+    }
+
+# Page 404 Handler
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("error.html"), 404
+
 #Page Routing
 @app.route("/")
 def index():
@@ -27,6 +41,11 @@ def commercial():
 def residential():
     ThreeProducts = Get.RetrieveProducts()
     return render_template("residential.html", ThreeProducts = ThreeProducts)
+
+@app.route("/product_<productID>")
+def product(productID):
+    ProductInfo = Get.RetrieveProductInfo(productID)
+    return render_template("product.html", ProductInfo = ProductInfo)
 
 
 @app.route("/energy")
@@ -253,13 +272,6 @@ def logout():
 @app.route("/error")
 def error():
     return render_template("error.html")
-
-@app.context_processor
-def inject_global_data():
-    return {
-        "account": session.get('account', None), #email address is considered as account
-        "type": session.get('type', None) #type is considered as account type (Personal, Business, Admin)
-    }
 
 if __name__ == "__main__":
     app.run(debug=True)
