@@ -115,7 +115,7 @@ def ReserveConsultation():
             message = "Please select a date in the future"
             return render_template("consultation.html", message=message)
         selected_date = datetime.strptime(date, '%Y-%m-%d')
-        if selected_date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+        if selected_date.weekday() >= 5:
             message = "Please select a weekday (Monday to Friday)"
             return render_template("consultation.html", message=message)
         

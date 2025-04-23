@@ -32,6 +32,15 @@ def index():
 def charger():
     return render_template("chargermap.html")
 
+@app.route("/t&c")
+def terms():
+    return render_template("terms.html")
+
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
 @app.route("/commercial")
 def commercial():
     ThreeProducts = Get.RetrieveProducts()
@@ -47,6 +56,9 @@ def product(productID):
     ProductInfo = Get.RetrieveProductInfo(productID)
     return render_template("product.html", ProductInfo = ProductInfo)
 
+@app.route("/carbon")
+def carbon():
+    return render_template("carbon.html")
 
 @app.route("/energy")
 def energy():
@@ -103,7 +115,6 @@ def consultation():
         return redirect("/login")
     
     return render_template("consultation.html")
-
 
 @app.route("/create_admin")
 def CreateAdmin():

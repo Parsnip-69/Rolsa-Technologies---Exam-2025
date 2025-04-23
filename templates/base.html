@@ -33,7 +33,7 @@
                 </li>
                 <li>Calculators <span><i class="fa fa-sort-down"></i></span>
                     <ul>
-                        <li><a href="/">Carbon Footprint</a></li>
+                        <li><a href="{{ url_for('carbon')}}">Carbon Footprint</a></li>
                         <li><a href="{{ url_for('energy')}}">Energy Usage</a></li>
                     </ul>
                 </li>
@@ -76,8 +76,8 @@
           </div>
           <div class="col">
                 <br>
-                <h5><a href="">Terms & Conditions</a></h5><br>
-                <h5><a href="">Privacy Policy</a></h5><br>
+                <h5><a href="{{ url_for('terms')}}">Terms & Conditions</a></h5><br>
+                <h5><a href="{{ url_for('privacy')}}">Privacy Policy</a></h5><br>
                 <h5><a href="">Accessibility</a></h5><br>
           </div>
         </div>
