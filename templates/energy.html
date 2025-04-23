@@ -53,6 +53,10 @@
         {% else %}
             <h4>No energy consumption recorded</h4>
         {% endif %}
+        {% if Carbon %}
+            <br>
+            <h5>Average Carbon Emissions for consumption: {{ Carbon }} kg CO2</h5>
+        {% endif %}
         <br>
         <hr>
         <br>

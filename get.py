@@ -3,6 +3,8 @@ from datetime import datetime
 from flask import render_template, request, session, redirect
 import math
 import random
+import requests
+import json
 
 def RetrieveInfo(account, FromWho):
 
@@ -335,3 +337,65 @@ def RetrieveProductInfo(productID):
     }
 
     return ProductInfo
+
+
+
+def RetrieveElectrityEmissions(total):
+
+    api_key = 'p9uyFp7qj9XKLtsAJtJK7Q'
+
+    url = 'https://www.carboninterface.com/api/v1/estimates'
+
+    data = {
+        "type": "electricity",
+        "electricity_unit": "kwh",
+        "electricity_value": total,
+        "country": "gb",
+    }
+    
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response_data = response.json()
+        Carbon = response_data['data']['attributes']['carbon_kg']
+    except (KeyError, ValueError, TypeError) as e:
+        Carbon = None
+
+    return Carbon
+
+
+def RetrieveVehicleEmissions(mileage):
+
+    api_key = 'p9uyFp7qj9XKLtsAJtJK7Q'
+
+    url = 'https://www.carboninterface.com/api/v1/estimates'
+
+    data = {
+        "type": "vehicle",
+        "distance_unit": "mi",
+        "distance_value": mileage,
+        "vehicle_model_id": "7268a9b7-17e8-4c8d-acca-57059252afe9"
+    }
+    
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+
+  
+    response = requests.post(url, headers=headers, json=data)
+ 
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        response_data = response.json()
+        Carbon = response_data['data']['attributes']['carbon_kg']
+    except (KeyError, ValueError, TypeError) as e:
+        Carbon = None
+
+    return Carbon
+ 
+
+

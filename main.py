@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect
+from flask import Flask, render_template, session, redirect, request
 import get as Get
 import post as Post
 
@@ -56,13 +56,26 @@ def product(productID):
     ProductInfo = Get.RetrieveProductInfo(productID)
     return render_template("product.html", ProductInfo = ProductInfo)
 
-@app.route("/carbon")
+@app.route("/carbon", methods=["GET", "POST"])
 def carbon():
+    if request.method == "POST":
+        miles = request.form.get("miles")
+        energy = request.form.get("energy")
+        Car = Get.RetrieveVehicleEmissions(miles)
+        Electrity = Get.RetrieveElectrityEmissions(energy)
+        if Car != None or Electrity != None:
+            Emission = Car + Electrity
+            return render_template("carbon.html", Car = round(Car, 2), Electrity = round(Electrity, 2), Emission = round(Emission, 2))
+        else:
+            return render_template("carbon.html")
+            
+        
     return render_template("carbon.html")
 
 @app.route("/energy")
 def energy():
-    return render_template("energy.html", items = items, total = total)
+    Carbon = Get.RetrieveElectrityEmissions(total)
+    return render_template("energy.html", items = items, total = total, Carbon = Carbon)
 
 @app.route("/login")
 def login():
@@ -192,7 +205,6 @@ def AddItem():
         global items, times, total
         items, times, total = Post.AddItemEnergy(items, times, total)
     except Exception as e:
-        print(f"Error in AddItem: {e}")
         return redirect("/error")
     return redirect("/energy")
 
