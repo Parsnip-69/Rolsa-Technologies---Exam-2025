@@ -24,8 +24,11 @@
                     <br>
                     <h4>Total consumption:</h4>
                     <h5>{{ Emission }} Kg CO2</h5>
+                    <br>
+                    <a href="{{ url_for('carbon')}}">Restart</a>
                 {% else %}
                     <form method="POST">
+                        <br><br>
                         <label for="miles">Average Number of Miles Driven in a Month:</label>
                         <br>
                         <input type="number" name="miles" required>
@@ -35,6 +38,7 @@
                         <input type="number" name="energy" required>
                         <br><br><br>
                         <button id="YellowButton" type="submit">Submit for Results</button>
+                        <br><br>
                     </form>   
                 {% endif %}
             </div>
