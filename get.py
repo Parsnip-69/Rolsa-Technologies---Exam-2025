@@ -138,8 +138,9 @@ def UnassignedJobs():
     UnassignedWork = {}
     con = sqlite3.connect("RolsaDB.db")
     cursor = con.cursor()
-    cursor.execute("SELECT SS.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID WHERE StaffID IS NULL AND B.BookingTypeID = 1 AND ForDateTime >= ?", (datetime.now(),))
-    Unassigned= cursor.fetchall()
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    cursor.execute("SELECT SS.BookingID FROM StaffSchedule SS JOIN Booking B ON SS.BookingID = B.BookingID WHERE StaffID IS NULL AND B.BookingTypeID = 1 AND ForDateTime >= ?", (current_time,))
+    Unassigned = cursor.fetchall()
     for job in Unassigned:
         cursor.execute("SELECT BookingID, FullName, ForDateTime FROM Booking JOIN Account A ON Booking.AccountID = A.AccountID JOIN Personal P ON A.AccountID = P.AccountID WHERE BookingID = ?", (job[0],))
         JobInfo = cursor.fetchone()

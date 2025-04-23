@@ -2,8 +2,10 @@
 {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 {% endblock %}
+{% block title%}Admin Panel{%endblock%}
 {% block content %}
     <h1>Admin Panel</h1>
+    <br>
     <div class="infobox">
     <center>
         <h2>Account Information</h2>

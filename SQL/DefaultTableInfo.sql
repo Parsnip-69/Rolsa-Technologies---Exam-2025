@@ -26,7 +26,7 @@ DELETE FROM Personal WHERE AccountID >= 2;
 DELETE FROM Business WHERE AccountID >= 1;
 DELETE FROM Staff WHERE AccountID >= 1;
 
-DELETE FROM Booking WHERE BookingTypeID == 4;
+DELETE FROM Booking WHERE BookingID > 0;
 DELETE FROM BookingReport WHERE ConsultationID >= 1;
 DELETE FROM StaffSchedule WHERE BookingID >= 1;
 
