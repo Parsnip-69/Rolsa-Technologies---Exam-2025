@@ -91,6 +91,7 @@ CREATE TABLE EnergyItem(
 
 CREATE TABLE EnergyUsage(
     EnergyUsageID INTEGER NOT NULL,
+    TotalUsage FLOAT NOT NULL,
     AccountID INTEGER NOT NULL,
     CreationDateTime DATETIME NOT NULL,
     PRIMARY KEY (EnergyUsageID),

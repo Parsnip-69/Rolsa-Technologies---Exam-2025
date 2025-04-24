@@ -397,5 +397,70 @@ def RetrieveVehicleEmissions(mileage):
 
     return Carbon
  
+def SavedEnergy(account):
+    SavedEnergy = {}
+    counter = 0
+
+
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+
+    cursor.execute("SELECT * FROM EnergyUsage WHERE AccountID = ?", (AccountID[0],))
+    EnergyUsage = cursor.fetchall()
+    con.close()
+
+    for energy in EnergyUsage:
+        Date = energy[3].split(" ")[0]
+        Time = energy[3].split(" ")[1]
+
+        DateTime = Date + " @ " + Time
+
+        SavedEnergy[counter] = {
+            "EnergyID": energy[0],
+            "Date":  DateTime,
+            "Total": energy[1],
+        }
+
+        counter += 1
+    
+    return SavedEnergy
+
+def RetrieveEnergyInfo(account, EnergyID):
+    EnergyItems = {}
+    counter = 0
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    
+    cursor.execute("SELECT * FROM EnergyUsage WHERE AccountID = ? AND EnergyUsageID = ?", (AccountID[0], EnergyID))
+    EnergyInfo = cursor.fetchone()
+
+    if EnergyInfo == None:
+        return None, None
+
+    cursor.execute("SELECT * FROM EnergyItem WHERE EnergyUsageID = ?", (EnergyInfo[0],))
+    EnergyItems = cursor.fetchall()
+    
+    for item in EnergyItems:
+        RoundedTotal = item[3] * item[4]
+        RoundedTotal = round(RoundedTotal, 5)
+        EnergyItems[counter] = {
+            "Name": item[2],
+            "Time": item[3],
+            "kWh": item[4],
+            "Total": RoundedTotal,
+        }
+        counter += 1
+
+    con.close()
+
+    return EnergyInfo, EnergyItems
+
+
+
+
 
 

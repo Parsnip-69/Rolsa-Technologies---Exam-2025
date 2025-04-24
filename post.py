@@ -355,5 +355,40 @@ def AddItemEnergy(items, times, total):
         times += 1 
 
         return items, times, total
+    
+def SaveEnergy(items, total):
+    now = datetime.now()
+    formatted_now = now.strftime('%Y-%m-%d %H:%M')
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    email = session['account']
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (email,))
+    AccountID = cursor.fetchone()
+    cursor.execute("INSERT INTO EnergyUsage (TotalUsage, AccountID, CreationDateTime) VALUES (?, ?, ?)", (total, AccountID[0], formatted_now))
+    con.commit()
+    cursor.execute("SELECT EnergyUsageID FROM EnergyUsage WHERE AccountID = ? AND CreationDateTime = ?", (AccountID[0], formatted_now))
+    EnergyUsageID = cursor.fetchone()
+
+    for item in items:
+        cursor.execute("INSERT INTO EnergyItem (EnergyUsageID, EnergyItem, LengthOfTime, EnergyUsage) VALUES (?, ?, ?, ?)", (EnergyUsageID[0], item['Item'], item['Time'], item['kWh']))
+        con.commit()
+
+    con.close()
+    return redirect("/reset")
+
+
+def DeleteSavedEnergy(account, EnergyID):
+    con = sqlite3.connect("RolsaDB.db")
+    cursor = con.cursor()
+    cursor.execute("SELECT AccountID FROM Account WHERE Email = ?", (account,))
+    AccountID = cursor.fetchone()
+    cursor.execute("DELETE FROM EnergyUsage WHERE EnergyUsageID = ? AND AccountID = ?", (EnergyID, AccountID[0]))
+    con.commit()
+    cursor.execute("DELETE FROM EnergyItem WHERE EnergyUsageID = ?", (EnergyID,))
+    con.close()
+    return redirect("/energy")
+
+
+
 
 

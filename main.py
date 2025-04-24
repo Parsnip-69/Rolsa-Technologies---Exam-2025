@@ -74,8 +74,15 @@ def carbon():
 
 @app.route("/energy")
 def energy():
+    account = session.get('account', None) 
     Carbon = Get.RetrieveElectrityEmissions(total)
-    return render_template("energy.html", items = items, total = total, Carbon = Carbon)
+    
+    if account != None:
+        SavedEnergy = Get.SavedEnergy(account)
+        return render_template("energy.html", items = items, total = total, Carbon = Carbon, SavedEnergy = SavedEnergy)
+    else:
+        return render_template("energy.html", items = items, total = total, Carbon = Carbon)
+    
 
 @app.route("/login")
 def login():
@@ -179,6 +186,30 @@ def BookReport(ReportID):
     else:
         return redirect("/account")
     
+@app.route("/view_saved_energy<EnergyID>")
+def ViewSavedEnergy(EnergyID):
+    if session.get('account', None) == None:
+        return redirect("/login")
+    account = session.get('account', None)
+    EnergyInfo, EnergyItems = Get.RetrieveEnergyInfo(account, EnergyID)
+    if EnergyInfo == None and EnergyItems == None:
+        return redirect("/error")
+
+    return render_template("viewenergy.html", EnergyInfo = EnergyInfo, EnergyItems = EnergyItems)
+
+@app.route("/delete_saved_energy<EnergyID>")
+def DeleteSavedEnergy(EnergyID):
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    account = session.get('account', None)
+    if session.get('type', None) in [1, 2]:
+        Post.DeleteSavedEnergy(account, EnergyID)
+        return redirect("/energy")
+    else:
+        return redirect("/account")
+
+    
 @app.route("/change_account_details")
 def ChangeAccountDetails():
     account = session.get('account', None)
@@ -207,14 +238,6 @@ def AddItem():
     except Exception as e:
         return redirect("/error")
     return redirect("/energy")
-
-@app.route('/reset')
-def reset():
-    global items, total
-    items = []
-    total = 0
-    return redirect ('/energy')
-
 
 #Personal/Business Post Routing
 @app.route("/ReserveConsultation", methods=["GET","POST"])
@@ -255,6 +278,16 @@ def ChangeAccountInfo():
     
     if session.get('type', None) in [1, 2]:
         return Post.ChangeAccountInfo()
+    
+@app.route("/SaveEnergy")
+def SaveEnergy():
+    if session.get('account', None) == None:
+        return redirect("/login")
+    
+    if session.get('type', None) in [1, 2]:
+        return Post.SaveEnergy(items, total)
+    else:
+        return redirect("/account")
 
 #Admin Only Post Routing
 @app.route("/AddAdmin", methods=["GET","POST"])
@@ -295,6 +328,13 @@ def logout():
 @app.route("/error")
 def error():
     return render_template("error.html")
+
+@app.route('/reset')
+def reset():
+    global items, total
+    items = []
+    total = 0
+    return redirect ('/energy')
 
 if __name__ == "__main__":
     app.run(debug=True)
