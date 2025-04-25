@@ -5,6 +5,8 @@ import math
 import random
 import requests
 import json
+from dotenv import load_dotenv, dotenv_values 
+import os
 
 def RetrieveInfo(account, FromWho):
 
@@ -340,16 +342,17 @@ def RetrieveProductInfo(productID):
 
 
 
-def RetrieveElectrityEmissions(total):
+def RetrieveElectrityEmissions(energy):
 
-    api_key = 'p9uyFp7qj9XKLtsAJtJK7Q'
+    load_dotenv()
+    api_key = os.getenv("carbon_api_key")
 
     url = 'https://www.carboninterface.com/api/v1/estimates'
 
     data = {
         "type": "electricity",
         "electricity_unit": "kwh",
-        "electricity_value": total,
+        "electricity_value": energy,
         "country": "gb",
     }
     
@@ -359,17 +362,22 @@ def RetrieveElectrityEmissions(total):
     }
     try:
         response = requests.post(url, headers=headers, json=data)
-        response_data = response.json()
+        response_data = response.json() 
         Carbon = response_data['data']['attributes']['carbon_kg']
+
     except (KeyError, ValueError, TypeError) as e:
         Carbon = None
+
+    if Carbon == None:
+        Carbon = "API request limit reached. Please try again later."
 
     return Carbon
 
 
 def RetrieveVehicleEmissions(mileage):
 
-    api_key = 'p9uyFp7qj9XKLtsAJtJK7Q'
+    load_dotenv()
+    api_key = os.getenv("carbon_api_key")
 
     url = 'https://www.carboninterface.com/api/v1/estimates'
 
@@ -386,14 +394,15 @@ def RetrieveVehicleEmissions(mileage):
     }
 
   
-    response = requests.post(url, headers=headers, json=data)
- 
     try:
         response = requests.post(url, headers=headers, json=data)
         response_data = response.json()
         Carbon = response_data['data']['attributes']['carbon_kg']
     except (KeyError, ValueError, TypeError) as e:
         Carbon = None
+
+    if Carbon == None:
+        Carbon = "API request limit reached. Please try again later."
 
     return Carbon
  

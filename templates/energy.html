@@ -56,8 +56,11 @@
             <h4>No energy consumption recorded</h4>
         {% endif %}
         {% if Carbon %}
+            {% if Carbon == "API request limit reached. Please try again later." %}
+            {% else %}
             <br>
             <h5>Average Carbon Emissions for consumption: {{ Carbon }} kg CO2</h5>
+            {% endif %}
         {% endif %}
         <br>
         <hr>

@@ -58,18 +58,21 @@ def product(productID):
 
 @app.route("/carbon", methods=["GET", "POST"])
 def carbon():
-    if request.method == "POST":
+    if request.method == "POST" and request.form.get("miles") and request.form.get("energy"):
         miles = request.form.get("miles")
         energy = request.form.get("energy")
         Car = Get.RetrieveVehicleEmissions(miles)
         Electrity = Get.RetrieveElectrityEmissions(energy)
-        if Car != None or Electrity != None:
-            Emission = Car + Electrity
-            return render_template("carbon.html", Car = round(Car, 2), Electrity = round(Electrity, 2), Emission = round(Emission, 2))
+        if Car is not None or Electrity is not None:
+            
+            if Electrity == "API request limit reached. Please try again later." or Car == "API request limit reached. Please try again later.":
+                return render_template("carbon.html", Emission = "API request limit reached. Please try again later.")
+            else:
+                Emission = Car + Electrity
+                return render_template("carbon.html", Car=round(Car, 2), Electrity=round(Electrity, 2), Emission=round(Emission, 2))
         else:
             return render_template("carbon.html")
             
-        
     return render_template("carbon.html")
 
 @app.route("/energy")
@@ -79,9 +82,9 @@ def energy():
     
     if account != None:
         SavedEnergy = Get.SavedEnergy(account)
-        return render_template("energy.html", items = items, total = total, Carbon = Carbon, SavedEnergy = SavedEnergy)
+        return render_template("energy.html", items = items, total = round(total,3), Carbon = Carbon, SavedEnergy = SavedEnergy)
     else:
-        return render_template("energy.html", items = items, total = total, Carbon = Carbon)
+        return render_template("energy.html", items = items, total = round(total, 3), Carbon = Carbon)
     
 
 @app.route("/login")

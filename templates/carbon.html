@@ -15,27 +15,31 @@
         <div class="col">
             <div class="box">
                 {% if Emission %}
-                    <h3>Average Emissions</h3>
-                    <h4>For Miles driven:</h4>
-                    <h5>{{Car}} Kg CO2</h5>
-                    <br>
-                    <h4>For Energy consumption:</h4>
-                    <h5>{{Electrity}} Kg CO2</h5>
-                    <br>
-                    <h4>Total consumption:</h4>
-                    <h5>{{ Emission }} Kg CO2</h5>
-                    <br>
-                    <a href="{{ url_for('carbon')}}">Restart</a>
+                    {% if Emission == "API request limit reached. Please try again later."%}
+                        <h3 style="color: red;">We are sorry but {{ Emission }}</h3>
+                    {% else %}
+                        <h3>Average Emissions</h3>
+                        <h4>For Miles driven:</h4>
+                        <h5>{{Car}} Kg CO2</h5>
+                        <br>
+                        <h4>For Energy consumption:</h4>
+                        <h5>{{Electrity}} Kg CO2</h5>
+                        <br>
+                        <h4>Total consumption:</h4>
+                        <h5>{{ Emission }} Kg CO2</h5>
+                        <br>
+                        <a href="{{ url_for('carbon')}}">Restart</a>
+                    {% endif %}
                 {% else %}
                     <form method="POST">
                         <br><br>
                         <label for="miles">Average Number of Miles Driven in a Month:</label>
                         <br>
-                        <input type="number" name="miles" required>
+                        <input type="number" name="miles" required min="0.5" step="0.5">
                         <br><br>
                         <label for="energy">Average Energy Comsumption (kWhs) in a month:</label>
                         <br>
-                        <input type="number" name="energy" required>
+                        <input type="number" name="energy" required min="0.5" step="0.5">
                         <br><br><br>
                         <button id="YellowButton" type="submit">Submit for Results</button>
                         <br><br>
