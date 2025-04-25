@@ -35,12 +35,12 @@
                 <br>
                 <label for="estimatedhours">Enter the number of estimated hours that the work will take</label>
                 <br>
-                <input type="number" name="estimatedhours" placeholder="e.g. 12" min="1" max="40" required>
+                <input type="number" name="estimatedhours" placeholder="e.g. 12" min="1" max="50" required>
                 <br><br>
                 <h5>Please enter the number of each item you suggest for the work</h5>
                 {% for counter, product in Products.items() %}
                     <label for="{{product.ProductID}}">Number of {{ product.Name}}:</label><br>
-                    <input type="number" name="{{product.ProductID}}" id="" min="0" placeholder="0" default="0">
+                    <input type="number" name="{{product.ProductID}}" id="" min="0" placeholder="0" default="0" max="50">
                     <br><br>
                 {% endfor %}
 

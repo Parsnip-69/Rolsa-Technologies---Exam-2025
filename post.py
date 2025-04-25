@@ -385,6 +385,7 @@ def DeleteSavedEnergy(account, EnergyID):
     cursor.execute("DELETE FROM EnergyUsage WHERE EnergyUsageID = ? AND AccountID = ?", (EnergyID, AccountID[0]))
     con.commit()
     cursor.execute("DELETE FROM EnergyItem WHERE EnergyUsageID = ?", (EnergyID,))
+    con.commit()
     con.close()
     return redirect("/energy")
 

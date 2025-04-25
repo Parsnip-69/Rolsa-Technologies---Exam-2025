@@ -40,11 +40,10 @@
             <label for="business">Yes</label><br>
             <input type="radio" id="business" name="business" value="No">
             <label for="business">No</label><br>
-            <br><br>
+            <br>
             <button type="submit" value="Register" id="BlueButton">Register</button>
             <br><br>
             {% if message %}
-                <br><br>
                 <h5 style="color: red;">{{ message }}</h5>
             {% endif %}
             <h5 style="text-align: center;">Already have an account? <a href="{{ url_for('login')}}">Login then</a></h5>
