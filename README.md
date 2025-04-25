@@ -8,10 +8,15 @@ The main features of the prototype are a booking for consultations/ installation
 ## Installation 
 Installations that are required to make the project run are having python installation and then python pip install then following package/ libraries.
 
-
-1. flask 
+1. Flask
 2. datetime
-3. sqlite3
-4. werkzeug
+3. werkzeug
+4. Sqlite3 
 5. math
 6. random
+7. requests
+8. dotenv
+9. os
+
+### Note
+The Carbon emissions calculator is using an API to complete the calculations. With the API, there's a limit of 200 requests a month. To see it API in action/working. Please find and check the screen recordings that are on a powerpoint file.
